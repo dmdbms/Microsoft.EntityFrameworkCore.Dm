@@ -1,4 +1,4 @@
-<Project Sdk="Microsoft.NET.Sdk">
+﻿<Project Sdk="Microsoft.NET.Sdk">
   <PropertyGroup>
     <AssemblyName>Microsoft.EntityFrameworkCore.Dm</AssemblyName>
     <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
@@ -11,14 +11,26 @@
   <PropertyGroup>
     <RootNamespace />
     <PackageId>dmdbms.$(AssemblyName)</PackageId>
-    <Version>5.0.0-preview.1</Version>
-    <Description>Dm database provider for Entity Framework Core</Description>
+    <Version>5.0.0</Version>
+    <Description>DaMeng(DM) database provider for Entity Framework Core.</Description>
     <PackageProjectUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+    <PackageIcon>logo.png</PackageIcon>
+    <PackageReadmeFile>README.md</PackageReadmeFile>
   </PropertyGroup>
   <ItemGroup>
-    <PackageReference Include="dmdbms.DmProvider" Version="1.1.0-preview.1" />
+    <None Include="..\..\logo.png">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+    <None Include="..\..\README.md">
+      <Pack>True</Pack>
+      <PackagePath>\</PackagePath>
+    </None>
+  </ItemGroup>
+  <ItemGroup>
+    <PackageReference Include="dmdbms.DmProvider" Version="1.1.1" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.14" />
   </ItemGroup>
 </Project>
