@@ -1,0 +1,24 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <AssemblyName>Microsoft.EntityFrameworkCore.Dm</AssemblyName>
+    <GenerateAssemblyInfo>False</GenerateAssemblyInfo>
+    <TargetFramework>net6.0</TargetFramework>
+  </PropertyGroup>
+  <PropertyGroup>
+    <LangVersion>Preview</LangVersion>
+    <AllowUnsafeBlocks>True</AllowUnsafeBlocks>
+  </PropertyGroup>
+  <PropertyGroup>
+    <RootNamespace />
+    <PackageId>dmdbms.$(AssemblyName)</PackageId>
+    <Version>5.0.0-preview.1</Version>
+    <Description>Dm database provider for Entity Framework Core</Description>
+    <PackageProjectUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</PackageProjectUrl>
+    <RepositoryUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</RepositoryUrl>
+    <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="dmdbms.DmProvider" Version="1.1.0-preview.1" />
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.14" />
+  </ItemGroup>
+</Project>
