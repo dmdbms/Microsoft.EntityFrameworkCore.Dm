@@ -13,7 +13,7 @@
     <PackageId>dmdbms.$(AssemblyName)</PackageId>
     <Version>5.0.2</Version>
     <Description>DaMeng database provider for Entity Framework Core.
-达梦数据库Entity Framework Core提供程序.</Description>
+适用于达梦数据库的Entity Framework Core提供程序.</Description>
     <PackageProjectUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
@@ -33,7 +33,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="dmdbms.DmProvider" Version="1.1.2" />
+    <PackageReference Include="dmdbms.DmProvider" Version="1.1.3" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.14" />
   </ItemGroup>
 </Project>
