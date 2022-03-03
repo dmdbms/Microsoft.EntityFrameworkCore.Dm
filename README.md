@@ -1,8 +1,8 @@
 # Microsoft.EntityFrameworkCore.Dm [![NuGet Version](http://img.shields.io/nuget/v/dmdbms.Microsoft.EntityFrameworkCore.Dm.svg?style=flat)](https://www.nuget.org/packages/dmdbms.Microsoft.EntityFrameworkCore.Dm/)
 
 * DaMeng database provider for Entity Framework Core.
-* ´ïÃÎÊı¾İ¿âEntity Framework CoreÌá¹©³ÌĞò.
+* è¾¾æ¢¦æ•°æ®åº“Entity Framework Coreæä¾›ç¨‹åº.
 
-## Related Packages - Ïà¹Ø°ü
+## Related Packages - ç›¸å…³åŒ…
 
 * ADO.NET: [dmdbms.DmProvider](https://www.nuget.org/packages/dmdbms.DmProvider/)
