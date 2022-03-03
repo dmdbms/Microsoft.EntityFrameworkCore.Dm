@@ -33,7 +33,7 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <PackageReference Include="dmdbms.DmProvider" Version="1.1.1" />
+    <PackageReference Include="dmdbms.DmProvider" Version="1.1.2" />
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="5.0.14" />
   </ItemGroup>
 </Project>
