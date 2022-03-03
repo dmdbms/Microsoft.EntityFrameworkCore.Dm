@@ -12,12 +12,15 @@
     <RootNamespace />
     <PackageId>dmdbms.$(AssemblyName)</PackageId>
     <Version>5.0.0</Version>
-    <Description>DaMeng(DM) database provider for Entity Framework Core.</Description>
+    <Description>DaMeng database provider for Entity Framework Core.
+达梦数据库Entity Framework Core提供程序.</Description>
     <PackageProjectUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</PackageProjectUrl>
     <RepositoryUrl>https://github.com/dmdbms/Microsoft.EntityFrameworkCore.Dm</RepositoryUrl>
     <GeneratePackageOnBuild>True</GeneratePackageOnBuild>
     <PackageIcon>logo.png</PackageIcon>
     <PackageReadmeFile>README.md</PackageReadmeFile>
+    <Authors>dmdbms</Authors>
+    <PackageTags>DM8;DaMeng;达梦;达梦数据库;Entity Framework Core</PackageTags>
   </PropertyGroup>
   <ItemGroup>
     <None Include="..\..\logo.png">
