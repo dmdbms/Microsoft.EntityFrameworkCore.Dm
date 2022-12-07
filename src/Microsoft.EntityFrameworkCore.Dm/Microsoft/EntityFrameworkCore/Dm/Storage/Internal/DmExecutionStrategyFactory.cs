@@ -18,7 +18,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    protected virtual IExecutionStrategy CreateDefaultStrategy(
+    protected override IExecutionStrategy CreateDefaultStrategy(
       ExecutionStrategyDependencies dependencies)
     {
       return (IExecutionStrategy) new DmExecutionStrategy(dependencies);

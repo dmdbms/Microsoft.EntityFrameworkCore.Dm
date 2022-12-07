@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    public virtual void ReleaseSavepoint(string name)
+    public override void ReleaseSavepoint(string name)
     {
     }
 

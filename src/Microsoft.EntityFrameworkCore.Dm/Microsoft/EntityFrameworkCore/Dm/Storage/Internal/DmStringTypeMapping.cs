@@ -96,19 +96,19 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
       return 8188;
     }
 
-    public virtual RelationalTypeMapping Clone(string storeType, int? size)
+    public override RelationalTypeMapping Clone(string storeType, int? size)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (RelationalTypeMapping) new DmStringTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithStoreTypeAndSize(storeType, size, new StoreTypePostfix?(DmStringTypeMapping.GetStoreTypePostfix(this._storeTypePostfix, ((RelationalTypeMapping) this).IsUnicode, size))));
     }
 
-    public virtual CoreTypeMapping Clone(ValueConverter converter)
+    public override CoreTypeMapping Clone(ValueConverter converter)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (CoreTypeMapping) new DmStringTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithComposedConverter(converter));
     }
 
-    protected virtual void ConfigureParameter(DbParameter parameter)
+    protected override void ConfigureParameter(DbParameter parameter)
     {
       object obj = parameter.Value;
       int? nullable1 = obj is string str ? new int?(str.Length) : new int?();
@@ -132,6 +132,6 @@ label_5:
       dbParameter.Size = num;
     }
 
-    protected virtual string GenerateNonNullSqlLiteral(object value) => "'" + this.EscapeSqlLiteral((string) value) + "'";
+    protected override string GenerateNonNullSqlLiteral(object value) => "'" + this.EscapeSqlLiteral((string) value) + "'";
   }
 }

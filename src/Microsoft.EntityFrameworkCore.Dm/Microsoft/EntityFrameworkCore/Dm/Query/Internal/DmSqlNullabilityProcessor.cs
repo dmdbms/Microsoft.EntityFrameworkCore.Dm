@@ -39,11 +39,11 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
     protected virtual bool UseRelationalNulls { get; }
 
-    protected virtual IReadOnlyDictionary<string, object?> ParameterValues { get; private set; }
+    protected virtual IReadOnlyDictionary<string, object> ParameterValues { get; private set; }
 
     public virtual SelectExpression Process(
       [NotNull] SelectExpression selectExpression,
-      [NotNull] IReadOnlyDictionary<string, object?> parameterValues,
+      [NotNull] IReadOnlyDictionary<string, object> parameterValues,
       out bool canCache)
     {
       Check.NotNull<SelectExpression>(selectExpression, nameof (selectExpression));
@@ -199,23 +199,23 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
       return flag4 | sqlExpression4 != selectExpression.Limit ? selectExpression.Update((IReadOnlyList<ProjectionExpression>) projectionExpressionList, (IReadOnlyList<TableExpressionBase>) tableExpressionBaseList, expression1, (IReadOnlyList<SqlExpression>) sqlExpressionList, expression2, (IReadOnlyList<OrderingExpression>) orderingExpressionList, sqlExpression4, sqlExpression3) : selectExpression;
     }
 
-    protected virtual SqlExpression? Visit(
-      SqlExpression? sqlExpression,
+    protected virtual SqlExpression Visit(
+      SqlExpression sqlExpression,
       out bool nullable)
     {
       return this.Visit(sqlExpression, false, out nullable);
     }
 
-    protected virtual SqlExpression? Visit(
-      SqlExpression? sqlExpression,
+    protected virtual SqlExpression Visit(
+      SqlExpression sqlExpression,
       bool allowOptimizedExpansion,
       out bool nullable)
     {
       return this.Visit(sqlExpression, allowOptimizedExpansion, false, out nullable);
     }
 
-    private SqlExpression? Visit(
-      SqlExpression? sqlExpression,
+    private SqlExpression Visit(
+      SqlExpression sqlExpression,
       bool allowOptimizedExpansion,
       bool preserveNonNullableColumns,
       out bool nullable)

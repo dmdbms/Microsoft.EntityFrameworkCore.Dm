@@ -23,7 +23,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
     protected override SelectExpression ProcessSqlNullability(
       SelectExpression selectExpression,
-      IReadOnlyDictionary<string, object?> parametersValues,
+      IReadOnlyDictionary<string, object> parametersValues,
       out bool canCache)
     {
       return new DmSqlNullabilityProcessor(this.Dependencies, this.UseRelationalNulls).Process(selectExpression, parametersValues, out canCache);

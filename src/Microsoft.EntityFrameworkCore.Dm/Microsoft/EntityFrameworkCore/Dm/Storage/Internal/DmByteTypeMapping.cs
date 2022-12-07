@@ -27,19 +27,19 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    public virtual RelationalTypeMapping Clone(string storeType, int? size)
+    public override RelationalTypeMapping Clone(string storeType, int? size)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = this.Parameters;
       return (RelationalTypeMapping) new DmByteTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithStoreTypeAndSize(storeType, size, new StoreTypePostfix?()));
     }
 
-    public virtual CoreTypeMapping Clone(ValueConverter converter)
+    public override CoreTypeMapping Clone(ValueConverter converter)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = this.Parameters;
       return (CoreTypeMapping) new DmByteTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithComposedConverter(converter));
     }
 
-    protected virtual string GenerateNonNullSqlLiteral(object value)
+    protected override string GenerateNonNullSqlLiteral(object value)
     {
       DefaultInterpolatedStringHandler interpolatedStringHandler = new DefaultInterpolatedStringHandler(10, 2);
       interpolatedStringHandler.AppendLiteral("CAST(");

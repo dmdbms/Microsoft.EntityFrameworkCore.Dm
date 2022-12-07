@@ -129,7 +129,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
       };
     }
 
-    protected virtual RelationalTypeMapping FindMapping(
+    protected override RelationalTypeMapping FindMapping(
       in RelationalTypeMappingInfo mappingInfo)
     {
       return this.FindRawMapping(mappingInfo)?.Clone( mappingInfo);

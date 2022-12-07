@@ -30,20 +30,20 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    protected virtual void ConfigureParameter(DbParameter parameter) => base.ConfigureParameter(parameter);
+    protected override void ConfigureParameter(DbParameter parameter) => base.ConfigureParameter(parameter);
 
-    public virtual RelationalTypeMapping Clone(string storeType, int? size)
+    public override RelationalTypeMapping Clone(string storeType, int? size)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (RelationalTypeMapping) new DmDateTimeTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithStoreTypeAndSize(storeType, size, new StoreTypePostfix?()));
     }
 
-    public virtual CoreTypeMapping Clone(ValueConverter converter)
+    public override CoreTypeMapping Clone(ValueConverter converter)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (CoreTypeMapping) new DmDateTimeTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithComposedConverter(converter));
     }
 
-    protected virtual string SqlLiteralFormatString => !(((RelationalTypeMapping) this).StoreType == "date") ? "'{0:yyyy-MM-dd HH:mm:ss.ffffff}'" : "'{0:yyyy-MM-dd}'";
+    protected override string SqlLiteralFormatString => !(((RelationalTypeMapping) this).StoreType == "date") ? "'{0:yyyy-MM-dd HH:mm:ss.ffffff}'" : "'{0:yyyy-MM-dd}'";
   }
 }

@@ -29,7 +29,7 @@ namespace Microsoft.EntityFrameworkCore.Internal
     {
     }
 
-    public virtual void Validate(
+    public override void Validate(
       IModel model,
       IDiagnosticsLogger<DbLoggerCategory.Model.Validation> logger)
     {
@@ -79,7 +79,7 @@ namespace Microsoft.EntityFrameworkCore.Internal
       }
     }
 
-    protected virtual void ValidateSharedColumnsCompatibility(
+    protected override void ValidateSharedColumnsCompatibility(
       IReadOnlyList<IEntityType> mappedTypes,
       in StoreObjectIdentifier storeObject,
       IDiagnosticsLogger<DbLoggerCategory.Model.Validation> logger)

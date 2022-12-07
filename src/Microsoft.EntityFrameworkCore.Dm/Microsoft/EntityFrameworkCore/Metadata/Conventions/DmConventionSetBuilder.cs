@@ -28,7 +28,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
       this._sqlGenerationHelper = sqlGenerationHelper;
     }
 
-    public virtual ConventionSet CreateConventionSet()
+    public override ConventionSet CreateConventionSet()
     {
       ConventionSet conventionSet = base.CreateConventionSet();
       DmValueGenerationStrategyConvention strategyConvention = new DmValueGenerationStrategyConvention(base.Dependencies, this.RelationalDependencies);

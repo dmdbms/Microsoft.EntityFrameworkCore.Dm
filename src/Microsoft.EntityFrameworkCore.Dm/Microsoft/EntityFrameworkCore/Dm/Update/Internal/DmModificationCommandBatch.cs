@@ -79,13 +79,13 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
       return num;
     }
 
-    protected virtual void ResetCommandText()
+    protected override void ResetCommandText()
     {
       base.ResetCommandText();
       this._bulkInsertCommands.Clear();
     }
 
-    protected virtual string GetCommandText() => ((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count > 1 ? "BEGIN " + base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count) + " END; " : base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count);
+    protected override string GetCommandText() => ((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count > 1 ? "BEGIN " + base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count) + " END; " : base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count);
 
     private string GetBulkInsertCommandText(int lastIndex)
     {

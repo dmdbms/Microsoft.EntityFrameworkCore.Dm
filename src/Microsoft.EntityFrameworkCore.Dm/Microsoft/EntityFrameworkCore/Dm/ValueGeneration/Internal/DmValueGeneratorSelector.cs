@@ -38,16 +38,16 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
       this._commandLogger = commandLogger;
     }
 
-    public virtual IDmValueGeneratorCache Cache => (IDmValueGeneratorCache) ((ValueGeneratorSelector) this).Cache;
+    public override IDmValueGeneratorCache Cache => (IDmValueGeneratorCache) ((ValueGeneratorSelector) this).Cache;
 
-    public virtual ValueGenerator Select(IProperty property, IEntityType entityType)
+    public override ValueGenerator Select(IProperty property, IEntityType entityType)
     {
       Check.NotNull<IProperty>(property, nameof (property));
       Check.NotNull<IEntityType>(entityType, nameof (entityType));
       return ((IReadOnlyProperty) property).GetValueGeneratorFactory() != null || ((IReadOnlyProperty) property).GetValueGenerationStrategy() != DmValueGenerationStrategy.SequenceHiLo ? ((ValueGeneratorSelector) this).Select(property, entityType) : this._sequenceFactory.Create(property, this.Cache.GetOrAddSequenceState(property), this._connection, this._rawSqlCommandBuilder, this._commandLogger);
     }
 
-    public virtual ValueGenerator Create(IProperty property, IEntityType entityType)
+    public override ValueGenerator Create(IProperty property, IEntityType entityType)
     {
       Check.NotNull<IProperty>(property, nameof (property));
       Check.NotNull<IEntityType>(entityType, nameof (entityType));

@@ -39,13 +39,13 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    public virtual RelationalTypeMapping Clone(string storeType, int? size)
+    public override RelationalTypeMapping Clone(string storeType, int? size)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (RelationalTypeMapping) new DmDecimalTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithStoreTypeAndSize(storeType, size, new StoreTypePostfix?()));
     }
 
-    public virtual CoreTypeMapping Clone(ValueConverter converter)
+    public override CoreTypeMapping Clone(ValueConverter converter)
     {
       RelationalTypeMapping.RelationalTypeMappingParameters parameters = base.Parameters;
       return (CoreTypeMapping) new DmDecimalTypeMapping(((RelationalTypeMapping.RelationalTypeMappingParameters)  parameters).WithComposedConverter(converter));

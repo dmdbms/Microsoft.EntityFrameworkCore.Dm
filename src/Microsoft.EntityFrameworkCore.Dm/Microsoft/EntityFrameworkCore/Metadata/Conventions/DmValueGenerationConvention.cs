@@ -21,7 +21,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
     {
     }
 
-    public virtual void ProcessPropertyAnnotationChanged(
+    public override void ProcessPropertyAnnotationChanged(
       IConventionPropertyBuilder propertyBuilder,
       string name,
       IConventionAnnotation annotation,
@@ -34,7 +34,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
         base.ProcessPropertyAnnotationChanged(propertyBuilder, name, annotation, oldAnnotation, context);
     }
 
-    protected virtual ValueGenerated? GetValueGenerated(IConventionProperty property) => base.GetValueGenerated(property);
+    protected override ValueGenerated? GetValueGenerated(IConventionProperty property) => base.GetValueGenerated(property);
 
     public static ValueGenerated? GetValueGenerated([NotNull] IProperty property)
     {

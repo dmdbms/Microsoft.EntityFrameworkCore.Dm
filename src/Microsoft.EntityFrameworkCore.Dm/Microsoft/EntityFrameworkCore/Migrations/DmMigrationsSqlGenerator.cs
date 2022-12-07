@@ -168,7 +168,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.AppendLine(stringAndClear).EndCommand(false);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       RenameIndexOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)
@@ -180,7 +180,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.EndCommand(false);
     }
 
-    protected virtual void SequenceOptions(
+    protected override void SequenceOptions(
       string schema,
       string name,
       SequenceOperation operation,
@@ -205,7 +205,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.Append(operation.IsCyclic ? " CYCLE" : " NOCYCLE");
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       RenameSequenceOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)
@@ -213,7 +213,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       throw new NotSupportedException("RenameSequenceOperation does not support");
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       [NotNull] RestartSequenceOperation operation,
       [CanBeNull] IModel model,
       [NotNull] MigrationCommandListBuilder builder)
@@ -221,7 +221,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       throw new NotSupportedException("RestartSequenceOperation does not support");
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       RenameTableOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)
@@ -235,7 +235,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.Append("ALTER TABLE ").Append(operation.Schema != null ? this.Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name, operation.Schema) : this.Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.Name)).Append(" RENAME TO ").Append(this.Dependencies.SqlGenerationHelper.DelimitIdentifier(operation.NewName)).Append(this.Dependencies.SqlGenerationHelper.StatementTerminator).EndCommand(false);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       EnsureSchemaOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)
@@ -283,7 +283,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.Append("BEGIN\n                         EXECUTE IMMEDIATE 'DROP USER " + operation.UserName + " CASCADE';\n                       END;").EndCommand(true);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       [NotNull] CreateIndexOperation operation,
       [CanBeNull] IModel model,
       [NotNull] MigrationCommandListBuilder builder,
@@ -302,7 +302,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       base.Generate(operation, model, builder, true);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       [NotNull] DropIndexOperation operation,
       [CanBeNull] IModel model,
       [NotNull] MigrationCommandListBuilder builder,
@@ -316,7 +316,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.AppendLine(this.Dependencies.SqlGenerationHelper.StatementTerminator).EndCommand(false);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       RenameColumnOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)
@@ -331,7 +331,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.EndCommand(false);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       InsertDataOperation operation,
       IModel model,
       MigrationCommandListBuilder builder,
@@ -358,7 +358,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       builder.EndCommand(false);
     }
 
-    protected virtual void Generate(
+    protected override void Generate(
       CreateTableOperation operation,
       IModel model,
       MigrationCommandListBuilder builder,
@@ -376,7 +376,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       this.EndStatement(builder, false);
     }
 
-    protected virtual void UniqueConstraint(
+    protected override void UniqueConstraint(
       [NotNull] AddUniqueConstraintOperation operation,
       [CanBeNull] IModel model,
       [NotNull] MigrationCommandListBuilder builder)
@@ -417,7 +417,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
             builder.Append(operation.IsNullable ? " NULL" : " NOT NULL");
         }
 
-        protected virtual void PrimaryKeyConstraint(
+        protected override void PrimaryKeyConstraint(
       [NotNull] AddPrimaryKeyOperation operation,
       [CanBeNull] IModel model,
       [NotNull] MigrationCommandListBuilder builder)
@@ -429,7 +429,7 @@ namespace Microsoft.EntityFrameworkCore.Migrations
       base.PrimaryKeyConstraint(operation, model, builder);
     }
 
-    protected virtual void ForeignKeyConstraint(
+    protected override void ForeignKeyConstraint(
       AddForeignKeyOperation operation,
       IModel model,
       MigrationCommandListBuilder builder)

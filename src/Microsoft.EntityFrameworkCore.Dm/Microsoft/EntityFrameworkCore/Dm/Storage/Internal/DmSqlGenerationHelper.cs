@@ -22,15 +22,15 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
     {
     }
 
-    public virtual string BatchTerminator => Environment.NewLine + "/";
+    public override string BatchTerminator => Environment.NewLine + "/";
 
-    public virtual void GenerateParameterName(StringBuilder builder, string name) => builder.Append(":").Append(name);
+    public override void GenerateParameterName(StringBuilder builder, string name) => builder.Append(":").Append(name);
 
-    public virtual string GenerateParameterName(string name) => ":" + name;
+    public override string GenerateParameterName(string name) => ":" + name;
 
-    public virtual string EscapeIdentifier(string identifier) => Check.NotEmpty(identifier, nameof (identifier)).Replace("\"", "\"\"");
+    public override string EscapeIdentifier(string identifier) => Check.NotEmpty(identifier, nameof (identifier)).Replace("\"", "\"\"");
 
-    public virtual void EscapeIdentifier(StringBuilder builder, string identifier)
+    public override void EscapeIdentifier(StringBuilder builder, string identifier)
     {
       Check.NotEmpty(identifier, nameof (identifier));
       int length = builder.Length;
@@ -38,9 +38,9 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
       builder.Replace("\"", "\"\"", length, identifier.Length);
     }
 
-    public virtual string DelimitIdentifier(string identifier) => "\"" + base.EscapeIdentifier(Check.NotEmpty(identifier, nameof (identifier))) + "\"";
+    public override string DelimitIdentifier(string identifier) => "\"" + base.EscapeIdentifier(Check.NotEmpty(identifier, nameof (identifier))) + "\"";
 
-    public virtual void DelimitIdentifier(StringBuilder builder, string identifier)
+    public override void DelimitIdentifier(StringBuilder builder, string identifier)
     {
       Check.NotEmpty(identifier, nameof (identifier));
       builder.Append('"');
