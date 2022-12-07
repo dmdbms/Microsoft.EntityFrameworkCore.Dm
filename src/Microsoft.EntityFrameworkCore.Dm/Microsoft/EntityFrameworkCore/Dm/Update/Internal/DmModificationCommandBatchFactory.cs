@@ -13,10 +13,10 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 
 		private readonly IDbContextOptions _options;
 
-		public DmModificationCommandBatchFactory([JetBrains.Annotations.NotNull] ModificationCommandBatchFactoryDependencies dependencies, [JetBrains.Annotations.NotNull] IDbContextOptions options)
+		public DmModificationCommandBatchFactory([NotNull] ModificationCommandBatchFactoryDependencies dependencies, [NotNull] IDbContextOptions options)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(dependencies, "dependencies");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(options, "options");
+			Check.NotNull<ModificationCommandBatchFactoryDependencies>(dependencies, "dependencies");
+			Check.NotNull<IDbContextOptions>(options, "options");
 			_dependencies = dependencies;
 			_options = options;
 		}
@@ -24,7 +24,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 		public virtual ModificationCommandBatch Create()
 		{
 			DmOptionsExtension dmOptionsExtension = _options.Extensions.OfType<DmOptionsExtension>().FirstOrDefault();
-			return new DmModificationCommandBatch(_dependencies, dmOptionsExtension?.MaxBatchSize);
+			return (ModificationCommandBatch)(object)new DmModificationCommandBatch(_dependencies, (dmOptionsExtension != null) ? ((RelationalOptionsExtension)dmOptionsExtension).MaxBatchSize : null);
 		}
 	}
 }

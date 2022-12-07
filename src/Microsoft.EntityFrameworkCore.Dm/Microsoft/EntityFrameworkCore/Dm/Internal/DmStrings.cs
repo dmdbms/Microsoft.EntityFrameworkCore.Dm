@@ -18,47 +18,47 @@ namespace Microsoft.EntityFrameworkCore.Dm.Internal
 
 		public static string InvalidColumnNameForFreeText => GetString("InvalidColumnNameForFreeText");
 
-		public static string IdentityBadType([JetBrains.Annotations.CanBeNull] object property, [JetBrains.Annotations.CanBeNull] object entityType, [JetBrains.Annotations.CanBeNull] object propertyType)
+		public static string IdentityBadType([CanBeNull] object property, [CanBeNull] object entityType, [CanBeNull] object propertyType)
 		{
 			return string.Format(GetString("IdentityBadType", "property", "entityType", "propertyType"), property, entityType, propertyType);
 		}
 
-		public static string MultipleIdentityColumns([JetBrains.Annotations.CanBeNull] object properties, [JetBrains.Annotations.CanBeNull] object table)
+		public static string MultipleIdentityColumns([CanBeNull] object properties, [CanBeNull] object table)
 		{
 			return string.Format(GetString("MultipleIdentityColumns", "properties", "table"), properties, table);
 		}
 
-		public static string NonKeyValueGeneration([JetBrains.Annotations.CanBeNull] object property, [JetBrains.Annotations.CanBeNull] object entityType)
+		public static string NonKeyValueGeneration([CanBeNull] object property, [CanBeNull] object entityType)
 		{
 			return string.Format(GetString("NonKeyValueGeneration", "property", "entityType"), property, entityType);
 		}
 
-		public static string SequenceBadType([JetBrains.Annotations.CanBeNull] object property, [JetBrains.Annotations.CanBeNull] object entityType, [JetBrains.Annotations.CanBeNull] object propertyType)
+		public static string SequenceBadType([CanBeNull] object property, [CanBeNull] object entityType, [CanBeNull] object propertyType)
 		{
 			return string.Format(GetString("SequenceBadType", "property", "entityType", "propertyType"), property, entityType, propertyType);
 		}
 
-		public static string UnqualifiedDataType([JetBrains.Annotations.CanBeNull] object dataType)
+		public static string UnqualifiedDataType([CanBeNull] object dataType)
 		{
 			return string.Format(GetString("UnqualifiedDataType", "dataType"), dataType);
 		}
 
-		public static string DuplicateColumnNameValueGenerationStrategyMismatch([JetBrains.Annotations.CanBeNull] object entityType1, [JetBrains.Annotations.CanBeNull] object property1, [JetBrains.Annotations.CanBeNull] object entityType2, [JetBrains.Annotations.CanBeNull] object property2, [JetBrains.Annotations.CanBeNull] object columnName, [JetBrains.Annotations.CanBeNull] object table)
+		public static string DuplicateColumnNameValueGenerationStrategyMismatch([CanBeNull] object entityType1, [CanBeNull] object property1, [CanBeNull] object entityType2, [CanBeNull] object property2, [CanBeNull] object columnName, [CanBeNull] object table)
 		{
 			return string.Format(GetString("DuplicateColumnNameValueGenerationStrategyMismatch", "entityType1", "property1", "entityType2", "property2", "columnName", "table"), entityType1, property1, entityType2, property2, columnName, table);
 		}
 
-		public static string UnqualifiedDataTypeOnProperty([JetBrains.Annotations.CanBeNull] object dataType, [JetBrains.Annotations.CanBeNull] object property)
+		public static string UnqualifiedDataTypeOnProperty([CanBeNull] object dataType, [CanBeNull] object property)
 		{
 			return string.Format(GetString("UnqualifiedDataTypeOnProperty", "dataType", "property"), dataType, property);
 		}
 
-		public static string InvalidTableToIncludeInScaffolding([JetBrains.Annotations.CanBeNull] object table)
+		public static string InvalidTableToIncludeInScaffolding([CanBeNull] object table)
 		{
 			return string.Format(GetString("InvalidTableToIncludeInScaffolding", "table"), table);
 		}
 
-		public static string FunctionOnClient([JetBrains.Annotations.CanBeNull] object methodName)
+		public static string FunctionOnClient([CanBeNull] object methodName)
 		{
 			return string.Format(GetString("FunctionOnClient", "methodName"), methodName);
 		}

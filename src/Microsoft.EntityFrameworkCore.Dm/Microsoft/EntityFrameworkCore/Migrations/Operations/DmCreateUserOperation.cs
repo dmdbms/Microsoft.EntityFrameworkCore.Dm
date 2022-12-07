@@ -6,14 +6,18 @@ namespace Microsoft.EntityFrameworkCore.Migrations.Operations
 	{
 		public virtual string UserName
 		{
-			get; [param: JetBrains.Annotations.NotNull]
+			get; [param: NotNull]
 			set;
 		}
 
 		public virtual string Password
 		{
-			get; [param: JetBrains.Annotations.NotNull]
+			get; [param: NotNull]
 			set;
+		}
+
+		public DmCreateUserOperation()
+		{
 		}
 	}
 }

@@ -223,8 +223,9 @@ namespace Microsoft.EntityFrameworkCore.Dm.Utilities
 
 		public static PropertyInfo GetAnyProperty(this Type type, string name)
 		{
+			string name2 = name;
 			List<PropertyInfo> list = (from p in type.GetRuntimeProperties()
-				where p.Name == name
+				where p.Name == name2
 				select p).ToList();
 			if (list.Count > 1)
 			{
@@ -514,7 +515,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Utilities
 			return type.GetInterfaces().Any((Type i) => i.IsGenericType && i.GetGenericTypeDefinition() == typeof(IQueryable<>));
 		}
 
-		public static string DisplayName([JetBrains.Annotations.NotNull] this Type type, bool fullName = true)
+		public static string DisplayName([NotNull] this Type type, bool fullName = true)
 		{
 			StringBuilder stringBuilder = new StringBuilder();
 			ProcessType(stringBuilder, type, fullName);
@@ -599,7 +600,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Utilities
 			builder.Append('>');
 		}
 
-		public static IEnumerable<string> GetNamespaces([JetBrains.Annotations.NotNull] this Type type)
+		public static IEnumerable<string> GetNamespaces([NotNull] this Type type)
 		{
 			if (_builtInTypeNames.ContainsKey(type))
 			{

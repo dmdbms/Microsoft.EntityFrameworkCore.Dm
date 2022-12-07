@@ -458,17 +458,17 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 		{
 			if (_methodInfoDateDiffMapping.TryGetValue(method, out var value))
 			{
-				SqlExpression sqlExpression = arguments[1];
-				SqlExpression sqlExpression2 = arguments[2];
-				RelationalTypeMapping typeMapping = ExpressionExtensions.InferTypeMapping(sqlExpression, sqlExpression2);
-				sqlExpression = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression, typeMapping);
-				sqlExpression2 = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression2, typeMapping);
-				return _sqlExpressionFactory.Function("DATEDIFF", new SqlExpression[3]
+				SqlExpression val = arguments[1];
+				SqlExpression val2 = arguments[2];
+				RelationalTypeMapping val3 = ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[2] { val, val2 });
+				val = _sqlExpressionFactory.ApplyTypeMapping(val, val3);
+				val2 = _sqlExpressionFactory.ApplyTypeMapping(val2, val3);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("DATEDIFF", (IEnumerable<SqlExpression>)(object)new SqlExpression[3]
 				{
-					_sqlExpressionFactory.Fragment(value),
-					sqlExpression,
-					sqlExpression2
-				}, nullable: true, new bool[3] { false, true, true }, typeof(int));
+					(SqlExpression)_sqlExpressionFactory.Fragment(value),
+					val,
+					val2
+				}, true, (IEnumerable<bool>)new bool[3] { false, true, true }, typeof(int), (RelationalTypeMapping)null);
 			}
 			return null;
 		}

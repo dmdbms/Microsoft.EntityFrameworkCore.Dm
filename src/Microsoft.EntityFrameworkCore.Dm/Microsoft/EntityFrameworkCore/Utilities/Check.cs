@@ -10,8 +10,8 @@ namespace Microsoft.EntityFrameworkCore.Utilities
 	[DebuggerStepThrough]
 	internal static class Check
 	{
-		[JetBrains.Annotations.ContractAnnotation("value:null => halt")]
-		public static T NotNull<T>([JetBrains.Annotations.NoEnumeration] T value, [JetBrains.Annotations.InvokerParameterName][JetBrains.Annotations.NotNull] string parameterName)
+		[ContractAnnotation("value:null => halt")]
+		public static T NotNull<T>([NoEnumeration] T value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value == null)
 			{
@@ -21,20 +21,20 @@ namespace Microsoft.EntityFrameworkCore.Utilities
 			return value;
 		}
 
-		[JetBrains.Annotations.ContractAnnotation("value:null => halt")]
-		public static IReadOnlyList<T> NotEmpty<T>(IReadOnlyList<T> value, [JetBrains.Annotations.InvokerParameterName][JetBrains.Annotations.NotNull] string parameterName)
+		[ContractAnnotation("value:null => halt")]
+		public static IReadOnlyList<T> NotEmpty<T>(IReadOnlyList<T> value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			NotNull(value, parameterName);
 			if (value.Count == 0)
 			{
 				NotEmpty(parameterName, "parameterName");
-				throw new ArgumentException(AbstractionsStrings.CollectionArgumentIsEmpty(parameterName));
+				throw new ArgumentException(AbstractionsStrings.CollectionArgumentIsEmpty((object)parameterName));
 			}
 			return value;
 		}
 
-		[JetBrains.Annotations.ContractAnnotation("value:null => halt")]
-		public static string NotEmpty(string value, [JetBrains.Annotations.InvokerParameterName][JetBrains.Annotations.NotNull] string parameterName)
+		[ContractAnnotation("value:null => halt")]
+		public static string NotEmpty(string value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			Exception ex = null;
 			if (value == null)
@@ -43,7 +43,7 @@ namespace Microsoft.EntityFrameworkCore.Utilities
 			}
 			else if (value.Trim().Length == 0)
 			{
-				ex = new ArgumentException(AbstractionsStrings.ArgumentIsEmpty(parameterName));
+				ex = new ArgumentException(AbstractionsStrings.ArgumentIsEmpty((object)parameterName));
 			}
 			if (ex != null)
 			{
@@ -53,17 +53,17 @@ namespace Microsoft.EntityFrameworkCore.Utilities
 			return value;
 		}
 
-		public static string NullButNotEmpty(string value, [JetBrains.Annotations.InvokerParameterName][JetBrains.Annotations.NotNull] string parameterName)
+		public static string NullButNotEmpty(string value, [InvokerParameterName][NotNull] string parameterName)
 		{
 			if (value != null && value.Length == 0)
 			{
 				NotEmpty(parameterName, "parameterName");
-				throw new ArgumentException(AbstractionsStrings.ArgumentIsEmpty(parameterName));
+				throw new ArgumentException(AbstractionsStrings.ArgumentIsEmpty((object)parameterName));
 			}
 			return value;
 		}
 
-		public static IReadOnlyList<T> HasNoNulls<T>(IReadOnlyList<T> value, [JetBrains.Annotations.InvokerParameterName][JetBrains.Annotations.NotNull] string parameterName) where T : class
+		public static IReadOnlyList<T> HasNoNulls<T>(IReadOnlyList<T> value, [InvokerParameterName][NotNull] string parameterName) where T : class
 		{
 			NotNull(value, parameterName);
 			if (value.Any((T e) => e == null))

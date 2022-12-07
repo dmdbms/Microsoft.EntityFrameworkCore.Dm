@@ -4,6 +4,7 @@ using System.Reflection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 {
@@ -36,35 +37,35 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 				string name = member.Name;
 				if (_datePartMapping.TryGetValue(name, out var value))
 				{
-					return _sqlExpressionFactory.Function("DATEPART", new SqlExpression[2]
+					return (SqlExpression)(object)_sqlExpressionFactory.Function("DATEPART", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 					{
-						_sqlExpressionFactory.Fragment(value),
+						(SqlExpression)_sqlExpressionFactory.Fragment(value),
 						instance
-					}, nullable: true, new bool[2] { false, true }, returnType);
+					}, true, (IEnumerable<bool>)new bool[2] { false, true }, returnType, (RelationalTypeMapping)null);
 				}
 				switch (name)
 				{
 				case "Date":
-					return _sqlExpressionFactory.Function("CONVERT", new SqlExpression[2]
+					return (SqlExpression)(object)_sqlExpressionFactory.Function("CONVERT", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 					{
-						_sqlExpressionFactory.Fragment("date"),
+						(SqlExpression)_sqlExpressionFactory.Fragment("date"),
 						instance
-					}, nullable: true, new bool[2] { false, true }, returnType, instance.TypeMapping);
+					}, true, (IEnumerable<bool>)new bool[2] { false, true }, returnType, instance.TypeMapping);
 				case "TimeOfDay":
-					return _sqlExpressionFactory.Convert(instance, returnType);
+					return (SqlExpression)(object)_sqlExpressionFactory.Convert(instance, returnType, (RelationalTypeMapping)null);
 				case "Now":
-					return _sqlExpressionFactory.Function((declaringType == typeof(DateTime)) ? "GETDATE" : "SYSDATETIMEOFFSET", Array.Empty<SqlExpression>(), nullable: false, Array.Empty<bool>(), returnType);
+					return (SqlExpression)(object)_sqlExpressionFactory.Function((declaringType == typeof(DateTime)) ? "GETDATE" : "SYSDATETIMEOFFSET", (IEnumerable<SqlExpression>)Array.Empty<SqlExpression>(), false, (IEnumerable<bool>)Array.Empty<bool>(), returnType, (RelationalTypeMapping)null);
 				case "UtcNow":
 				{
-					SqlFunctionExpression sqlFunctionExpression = _sqlExpressionFactory.Function((declaringType == typeof(DateTime)) ? "GETUTCDATE" : "SYSUTCDATETIME", Array.Empty<SqlExpression>(), nullable: false, Array.Empty<bool>(), returnType);
-					return (declaringType == typeof(DateTime)) ? ((SqlExpression)sqlFunctionExpression) : ((SqlExpression)_sqlExpressionFactory.Convert(sqlFunctionExpression, returnType));
+					SqlFunctionExpression val = _sqlExpressionFactory.Function((declaringType == typeof(DateTime)) ? "GETUTCDATE" : "SYSUTCDATETIME", (IEnumerable<SqlExpression>)Array.Empty<SqlExpression>(), false, (IEnumerable<bool>)Array.Empty<bool>(), returnType, (RelationalTypeMapping)null);
+					return (SqlExpression)((declaringType == typeof(DateTime)) ? ((object)val) : ((object)_sqlExpressionFactory.Convert((SqlExpression)(object)val, returnType, (RelationalTypeMapping)null)));
 				}
 				case "Today":
-					return _sqlExpressionFactory.Function("CONVERT", new SqlExpression[2]
+					return (SqlExpression)(object)_sqlExpressionFactory.Function("CONVERT", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 					{
-						_sqlExpressionFactory.Fragment("date"),
-						_sqlExpressionFactory.Function("GETDATE", Array.Empty<SqlExpression>(), nullable: false, Array.Empty<bool>(), typeof(DateTime))
-					}, nullable: true, new bool[2] { false, true }, returnType);
+						(SqlExpression)_sqlExpressionFactory.Fragment("date"),
+						(SqlExpression)_sqlExpressionFactory.Function("GETDATE", (IEnumerable<SqlExpression>)Array.Empty<SqlExpression>(), false, (IEnumerable<bool>)Array.Empty<bool>(), typeof(DateTime), (RelationalTypeMapping)null)
+					}, true, (IEnumerable<bool>)new bool[2] { false, true }, returnType, (RelationalTypeMapping)null);
 				}
 			}
 			return null;

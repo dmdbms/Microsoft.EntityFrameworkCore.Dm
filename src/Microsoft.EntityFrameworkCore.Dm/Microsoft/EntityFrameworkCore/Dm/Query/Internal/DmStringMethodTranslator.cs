@@ -1,6 +1,7 @@
 using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Reflection;
 using System.Text;
 using Microsoft.EntityFrameworkCore.Diagnostics;
@@ -61,56 +62,60 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 		{
+			//IL_00da: Unknown result type (might be due to invalid IL or missing references)
+			//IL_00e0: Expected O, but got Unknown
 			if (_indexOfMethodInfo.Equals(method))
 			{
-				SqlExpression sqlExpression = arguments[0];
-				RelationalTypeMapping typeMapping = ExpressionExtensions.InferTypeMapping(instance, sqlExpression);
-				sqlExpression = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression, typeMapping);
-				SqlBinaryExpression elseResult = _sqlExpressionFactory.Subtract(_sqlExpressionFactory.Function("POSITION", new SqlExpression[2]
+				SqlExpression val = arguments[0];
+				RelationalTypeMapping val2 = ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[2] { instance, val });
+				val = _sqlExpressionFactory.ApplyTypeMapping(val, val2);
+				SqlBinaryExpression val3 = _sqlExpressionFactory.Subtract((SqlExpression)(object)_sqlExpressionFactory.Function("POSITION", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 				{
-					sqlExpression,
-					_sqlExpressionFactory.ApplyTypeMapping(instance, typeMapping)
-				}, nullable: true, new bool[2] { true, true }, method.ReturnType), _sqlExpressionFactory.Constant(1));
-				return _sqlExpressionFactory.Case(new CaseWhenClause[1]
+					val,
+					_sqlExpressionFactory.ApplyTypeMapping(instance, val2)
+				}, true, (IEnumerable<bool>)new bool[2] { true, true }, method.ReturnType, (RelationalTypeMapping)null), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)1, (RelationalTypeMapping)null), (RelationalTypeMapping)null);
+				return (SqlExpression)(object)_sqlExpressionFactory.Case((IReadOnlyList<CaseWhenClause>)(object)new CaseWhenClause[1]
 				{
-					new CaseWhenClause(_sqlExpressionFactory.Equal(sqlExpression, _sqlExpressionFactory.Constant(string.Empty, typeMapping)), _sqlExpressionFactory.Constant(0))
-				}, elseResult);
+					new CaseWhenClause((SqlExpression)(object)_sqlExpressionFactory.Equal(val, (SqlExpression)(object)_sqlExpressionFactory.Constant((object)string.Empty, val2)), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)0, (RelationalTypeMapping)null))
+				}, (SqlExpression)(object)val3);
 			}
 			if (_replaceMethodInfo.Equals(method))
 			{
-				SqlExpression sqlExpression2 = arguments[0];
-				SqlExpression sqlExpression3 = arguments[1];
-				RelationalTypeMapping typeMapping2 = ExpressionExtensions.InferTypeMapping(instance, sqlExpression2, sqlExpression3);
-				instance = _sqlExpressionFactory.ApplyTypeMapping(instance, typeMapping2);
-				sqlExpression2 = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression2, typeMapping2);
-				sqlExpression3 = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression3, typeMapping2);
-				return _sqlExpressionFactory.Function("REPLACE", new SqlExpression[3] { instance, sqlExpression2, sqlExpression3 }, nullable: true, new bool[3] { true, true, true }, method.ReturnType, typeMapping2);
+				SqlExpression val4 = arguments[0];
+				SqlExpression val5 = arguments[1];
+				RelationalTypeMapping val6 = ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[3] { instance, val4, val5 });
+				instance = _sqlExpressionFactory.ApplyTypeMapping(instance, val6);
+				val4 = _sqlExpressionFactory.ApplyTypeMapping(val4, val6);
+				val5 = _sqlExpressionFactory.ApplyTypeMapping(val5, val6);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("REPLACE", (IEnumerable<SqlExpression>)(object)new SqlExpression[3] { instance, val4, val5 }, true, (IEnumerable<bool>)new bool[3] { true, true, true }, method.ReturnType, val6);
 			}
 			if (_toLowerMethodInfo.Equals(method) || _toUpperMethodInfo.Equals(method))
 			{
-				return _sqlExpressionFactory.Function(_toLowerMethodInfo.Equals(method) ? "LOWER" : "UPPER", new SqlExpression[1] { instance }, nullable: true, new bool[1] { true }, method.ReturnType, instance.TypeMapping);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function(_toLowerMethodInfo.Equals(method) ? "LOWER" : "UPPER", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { instance }, true, (IEnumerable<bool>)new bool[1] { true }, method.ReturnType, instance.TypeMapping);
 			}
 			if (_substringMethodInfo.Equals(method))
 			{
-				return _sqlExpressionFactory.Function("SUBSTRING", new SqlExpression[3]
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("SUBSTRING", (IEnumerable<SqlExpression>)(object)new SqlExpression[3]
 				{
 					instance,
-					_sqlExpressionFactory.Add(arguments[0], _sqlExpressionFactory.Constant(1)),
+					(SqlExpression)_sqlExpressionFactory.Add(arguments[0], (SqlExpression)(object)_sqlExpressionFactory.Constant((object)1, (RelationalTypeMapping)null), (RelationalTypeMapping)null),
 					arguments[1]
-				}, nullable: true, new bool[3] { true, true, true }, method.ReturnType, instance.TypeMapping);
+				}, true, (IEnumerable<bool>)new bool[3] { true, true, true }, method.ReturnType, instance.TypeMapping);
 			}
 			if (_isNullOrWhiteSpaceMethodInfo.Equals(method))
 			{
-				SqlExpression sqlExpression4 = arguments[0];
-				return _sqlExpressionFactory.OrElse(_sqlExpressionFactory.IsNull(sqlExpression4), _sqlExpressionFactory.Equal(_sqlExpressionFactory.Function("LTRIM", new SqlFunctionExpression[1] { _sqlExpressionFactory.Function("RTRIM", new SqlExpression[1] { sqlExpression4 }, nullable: true, new bool[1] { true }, sqlExpression4.Type, sqlExpression4.TypeMapping) }, nullable: true, new bool[1] { true }, sqlExpression4.Type, sqlExpression4.TypeMapping), _sqlExpressionFactory.Constant(string.Empty, sqlExpression4.TypeMapping)));
+				SqlExpression val7 = arguments[0];
+				return (SqlExpression)(object)_sqlExpressionFactory.OrElse((SqlExpression)(object)_sqlExpressionFactory.IsNull(val7), (SqlExpression)(object)_sqlExpressionFactory.Equal((SqlExpression)(object)_sqlExpressionFactory.Function("LTRIM", (IEnumerable<SqlExpression>)(object)new SqlFunctionExpression[1] { _sqlExpressionFactory.Function("RTRIM", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { val7 }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)val7).Type, val7.TypeMapping) }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)val7).Type, val7.TypeMapping), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)string.Empty, val7.TypeMapping)));
 			}
 			int num;
 			if (!(_trimStartMethodInfoWithoutArgs?.Equals(method) ?? false))
 			{
 				if (_trimStartMethodInfoWithCharArrayArg.Equals(method))
 				{
-					Array obj = (arguments[0] as SqlConstantExpression)?.Value as Array;
-					num = ((obj != null && obj.Length == 0) ? 1 : 0);
+					SqlExpression obj = arguments[0];
+					SqlExpression obj2 = ((obj is SqlConstantExpression) ? obj : null);
+					Array obj3 = ((obj2 != null) ? ((SqlConstantExpression)obj2).Value : null) as Array;
+					num = ((obj3 != null && obj3.Length == 0) ? 1 : 0);
 				}
 				else
 				{
@@ -123,15 +128,17 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 			}
 			if (num != 0)
 			{
-				return _sqlExpressionFactory.Function("LTRIM", new SqlExpression[1] { instance }, nullable: true, new bool[1] { true }, instance.Type, instance.TypeMapping);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("LTRIM", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { instance }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)instance).Type, instance.TypeMapping);
 			}
 			int num2;
 			if (!(_trimEndMethodInfoWithoutArgs?.Equals(method) ?? false))
 			{
 				if (_trimEndMethodInfoWithCharArrayArg.Equals(method))
 				{
-					Array obj2 = (arguments[0] as SqlConstantExpression)?.Value as Array;
-					num2 = ((obj2 != null && obj2.Length == 0) ? 1 : 0);
+					SqlExpression obj4 = arguments[0];
+					SqlExpression obj5 = ((obj4 is SqlConstantExpression) ? obj4 : null);
+					Array obj6 = ((obj5 != null) ? ((SqlConstantExpression)obj5).Value : null) as Array;
+					num2 = ((obj6 != null && obj6.Length == 0) ? 1 : 0);
 				}
 				else
 				{
@@ -144,15 +151,17 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 			}
 			if (num2 != 0)
 			{
-				return _sqlExpressionFactory.Function("RTRIM", new SqlExpression[1] { instance }, nullable: true, new bool[1] { true }, instance.Type, instance.TypeMapping);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("RTRIM", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { instance }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)instance).Type, instance.TypeMapping);
 			}
 			int num3;
 			if (!(_trimMethodInfoWithoutArgs?.Equals(method) ?? false))
 			{
 				if (_trimMethodInfoWithCharArrayArg.Equals(method))
 				{
-					Array obj3 = (arguments[0] as SqlConstantExpression)?.Value as Array;
-					num3 = ((obj3 != null && obj3.Length == 0) ? 1 : 0);
+					SqlExpression obj7 = arguments[0];
+					SqlExpression obj8 = ((obj7 is SqlConstantExpression) ? obj7 : null);
+					Array obj9 = ((obj8 != null) ? ((SqlConstantExpression)obj8).Value : null) as Array;
+					num3 = ((obj9 != null && obj9.Length == 0) ? 1 : 0);
 				}
 				else
 				{
@@ -165,24 +174,24 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 			}
 			if (num3 != 0)
 			{
-				return _sqlExpressionFactory.Function("LTRIM", new SqlFunctionExpression[1] { _sqlExpressionFactory.Function("RTRIM", new SqlExpression[1] { instance }, nullable: true, new bool[1] { true }, instance.Type, instance.TypeMapping) }, nullable: true, new bool[1] { true }, instance.Type, instance.TypeMapping);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("LTRIM", (IEnumerable<SqlExpression>)(object)new SqlFunctionExpression[1] { _sqlExpressionFactory.Function("RTRIM", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { instance }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)instance).Type, instance.TypeMapping) }, true, (IEnumerable<bool>)new bool[1] { true }, ((Expression)(object)instance).Type, instance.TypeMapping);
 			}
 			if (_containsMethodInfo.Equals(method))
 			{
-				SqlExpression sqlExpression5 = arguments[0];
-				RelationalTypeMapping typeMapping3 = ExpressionExtensions.InferTypeMapping(instance, sqlExpression5);
-				instance = _sqlExpressionFactory.ApplyTypeMapping(instance, typeMapping3);
-				sqlExpression5 = _sqlExpressionFactory.ApplyTypeMapping(sqlExpression5, typeMapping3);
-				SqlConstantExpression sqlConstantExpression = sqlExpression5 as SqlConstantExpression;
-				if (sqlConstantExpression != null)
+				SqlExpression val8 = arguments[0];
+				RelationalTypeMapping val9 = ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[2] { instance, val8 });
+				instance = _sqlExpressionFactory.ApplyTypeMapping(instance, val9);
+				val8 = _sqlExpressionFactory.ApplyTypeMapping(val8, val9);
+				SqlConstantExpression val10 = (SqlConstantExpression)(object)((val8 is SqlConstantExpression) ? val8 : null);
+				if (val10 != null)
 				{
-					if ((string)sqlConstantExpression.Value == string.Empty)
+					if ((string)val10.Value == string.Empty)
 					{
-						return _sqlExpressionFactory.Constant(true);
+						return (SqlExpression)(object)_sqlExpressionFactory.Constant((object)true, (RelationalTypeMapping)null);
 					}
-					return _sqlExpressionFactory.GreaterThan(_sqlExpressionFactory.Function("POSITION", new SqlExpression[2] { sqlExpression5, instance }, nullable: true, new bool[2] { true, true }, typeof(int)), _sqlExpressionFactory.Constant(0));
+					return (SqlExpression)(object)_sqlExpressionFactory.GreaterThan((SqlExpression)(object)_sqlExpressionFactory.Function("POSITION", (IEnumerable<SqlExpression>)(object)new SqlExpression[2] { val8, instance }, true, (IEnumerable<bool>)new bool[2] { true, true }, typeof(int), (RelationalTypeMapping)null), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)0, (RelationalTypeMapping)null));
 				}
-				return _sqlExpressionFactory.OrElse(_sqlExpressionFactory.Equal(sqlExpression5, _sqlExpressionFactory.Constant(string.Empty, typeMapping3)), _sqlExpressionFactory.GreaterThan(_sqlExpressionFactory.Function("POSITION", new SqlExpression[2] { sqlExpression5, instance }, nullable: true, new bool[2] { true, true }, typeof(int)), _sqlExpressionFactory.Constant(0)));
+				return (SqlExpression)(object)_sqlExpressionFactory.OrElse((SqlExpression)(object)_sqlExpressionFactory.Equal(val8, (SqlExpression)(object)_sqlExpressionFactory.Constant((object)string.Empty, val9)), (SqlExpression)(object)_sqlExpressionFactory.GreaterThan((SqlExpression)(object)_sqlExpressionFactory.Function("POSITION", (IEnumerable<SqlExpression>)(object)new SqlExpression[2] { val8, instance }, true, (IEnumerable<bool>)new bool[2] { true, true }, typeof(int), (RelationalTypeMapping)null), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)0, (RelationalTypeMapping)null)));
 			}
 			if (_startsWithMethodInfo.Equals(method))
 			{
@@ -197,32 +206,32 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		private SqlExpression TranslateStartsEndsWith(SqlExpression instance, SqlExpression pattern, bool startsWith)
 		{
-			RelationalTypeMapping typeMapping = ExpressionExtensions.InferTypeMapping(instance, pattern);
-			instance = _sqlExpressionFactory.ApplyTypeMapping(instance, typeMapping);
-			pattern = _sqlExpressionFactory.ApplyTypeMapping(pattern, typeMapping);
-			SqlConstantExpression sqlConstantExpression = pattern as SqlConstantExpression;
-			if (sqlConstantExpression != null)
+			RelationalTypeMapping val = ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[2] { instance, pattern });
+			instance = _sqlExpressionFactory.ApplyTypeMapping(instance, val);
+			pattern = _sqlExpressionFactory.ApplyTypeMapping(pattern, val);
+			SqlConstantExpression val2 = (SqlConstantExpression)(object)((pattern is SqlConstantExpression) ? pattern : null);
+			if (val2 != null)
 			{
-				string text = sqlConstantExpression.Value as string;
+				string text = val2.Value as string;
 				if (text == null)
 				{
-					return _sqlExpressionFactory.Like(instance, _sqlExpressionFactory.Constant(null, typeMapping));
+					return (SqlExpression)(object)_sqlExpressionFactory.Like(instance, (SqlExpression)(object)_sqlExpressionFactory.Constant((object)null, val), (SqlExpression)null);
 				}
-				return text.Any((char c) => IsLikeWildChar(c)) ? _sqlExpressionFactory.Like(instance, _sqlExpressionFactory.Constant(startsWith ? (EscapeLikePattern(text) + "%") : ("%" + EscapeLikePattern(text))), _sqlExpressionFactory.Constant('\\'.ToString())) : _sqlExpressionFactory.Like(instance, _sqlExpressionFactory.Constant(startsWith ? (text + "%") : ("%" + text)));
+				return (SqlExpression)(object)(text.Any((char c) => IsLikeWildChar(c)) ? _sqlExpressionFactory.Like(instance, (SqlExpression)(object)_sqlExpressionFactory.Constant((object)(startsWith ? (EscapeLikePattern(text) + "%") : ("%" + EscapeLikePattern(text))), (RelationalTypeMapping)null), (SqlExpression)(object)_sqlExpressionFactory.Constant((object)'\\'.ToString(), (RelationalTypeMapping)null)) : _sqlExpressionFactory.Like(instance, (SqlExpression)(object)_sqlExpressionFactory.Constant((object)(startsWith ? (text + "%") : ("%" + text)), (RelationalTypeMapping)null), (SqlExpression)null));
 			}
 			if (startsWith)
 			{
-				return _sqlExpressionFactory.Equal(_sqlExpressionFactory.Function("LEFT", new SqlExpression[2]
+				return (SqlExpression)(object)_sqlExpressionFactory.Equal((SqlExpression)(object)_sqlExpressionFactory.Function("LEFT", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 				{
 					instance,
-					_sqlExpressionFactory.Function("LEN", new SqlExpression[1] { pattern }, nullable: true, new bool[1] { true }, typeof(int))
-				}, nullable: true, new bool[2] { true, true }, typeof(string), typeMapping), pattern);
+					(SqlExpression)_sqlExpressionFactory.Function("LEN", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { pattern }, true, (IEnumerable<bool>)new bool[1] { true }, typeof(int), (RelationalTypeMapping)null)
+				}, true, (IEnumerable<bool>)new bool[2] { true, true }, typeof(string), val), pattern);
 			}
-			return _sqlExpressionFactory.Equal(_sqlExpressionFactory.Function("RIGHT", new SqlExpression[2]
+			return (SqlExpression)(object)_sqlExpressionFactory.Equal((SqlExpression)(object)_sqlExpressionFactory.Function("RIGHT", (IEnumerable<SqlExpression>)(object)new SqlExpression[2]
 			{
 				instance,
-				_sqlExpressionFactory.Function("LEN", new SqlExpression[1] { pattern }, nullable: true, new bool[1] { true }, typeof(int))
-			}, nullable: true, new bool[2] { true, true }, typeof(string), typeMapping), pattern);
+				(SqlExpression)_sqlExpressionFactory.Function("LEN", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { pattern }, true, (IEnumerable<bool>)new bool[1] { true }, typeof(int), (RelationalTypeMapping)null)
+			}, true, (IEnumerable<bool>)new bool[2] { true, true }, typeof(string), val), pattern);
 		}
 
 		private bool IsLikeWildChar(char c)

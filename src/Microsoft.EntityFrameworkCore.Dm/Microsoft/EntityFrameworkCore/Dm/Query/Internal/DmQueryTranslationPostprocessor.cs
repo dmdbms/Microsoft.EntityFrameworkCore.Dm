@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 		public override Expression Process(Expression query)
 		{
 			query = base.Process(query);
-			query = new SearchConditionConvertingExpressionVisitor(RelationalDependencies.SqlExpressionFactory).Visit(query);
+			query = ((ExpressionVisitor)(object)new SearchConditionConvertingExpressionVisitor(base.RelationalDependencies.SqlExpressionFactory)).Visit(query);
 			return query;
 		}
 	}

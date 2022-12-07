@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Infrastructure.Internal
 		{
 			private string _logFragment;
 
-			private new DmOptionsExtension Extension => (DmOptionsExtension)base.Extension;
+			private DmOptionsExtension Extension => (DmOptionsExtension)(object)((RelationalExtensionInfo)this).Extension;
 
 			public override bool IsDatabaseProvider => true;
 
@@ -24,7 +24,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Infrastructure.Internal
 					if (_logFragment == null)
 					{
 						StringBuilder stringBuilder = new StringBuilder();
-						stringBuilder.Append(base.LogFragment);
+						stringBuilder.Append(((RelationalExtensionInfo)this).LogFragment);
 						_logFragment = stringBuilder.ToString();
 					}
 					return _logFragment;
@@ -36,32 +36,33 @@ namespace Microsoft.EntityFrameworkCore.Dm.Infrastructure.Internal
 			{
 			}
 
-			public override void PopulateDebugInfo([JetBrains.Annotations.NotNull] IDictionary<string, string> debugInfo)
+			public override void PopulateDebugInfo([NotNull] IDictionary<string, string> debugInfo)
 			{
 			}
 		}
 
 		private DbContextOptionsExtensionInfo _info;
 
-		public override DbContextOptionsExtensionInfo Info => _info ?? (_info = new ExtensionInfo(this));
+		public override DbContextOptionsExtensionInfo Info => _info ?? (_info = (DbContextOptionsExtensionInfo)(object)new ExtensionInfo((IDbContextOptionsExtension)(object)this));
 
 		public DmOptionsExtension()
+			: base()
 		{
 		}
 
-		protected DmOptionsExtension([JetBrains.Annotations.NotNull] DmOptionsExtension copyFrom)
-			: base(copyFrom)
+		protected DmOptionsExtension([NotNull] DmOptionsExtension copyFrom)
+			: base((RelationalOptionsExtension)(object)copyFrom)
 		{
 		}
 
 		protected override RelationalOptionsExtension Clone()
 		{
-			return new DmOptionsExtension(this);
+			return (RelationalOptionsExtension)(object)new DmOptionsExtension(this);
 		}
 
 		public override void ApplyServices(IServiceCollection services)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(services, "services");
+			Check.NotNull(services, "services");
 			services.AddEntityFrameworkDm();
 		}
 	}

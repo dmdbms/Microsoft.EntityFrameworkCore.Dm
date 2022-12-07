@@ -17,11 +17,11 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 
 		private readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
 
-		private readonly IDiagnosticsLogger<DbLoggerCategory.Database.Command> _commandLogger;
+		private readonly IRelationalCommandDiagnosticsLogger _commandLogger;
 
-		public new virtual IDmValueGeneratorCache Cache => (IDmValueGeneratorCache)base.Cache;
+		public virtual IDmValueGeneratorCache Cache => (IDmValueGeneratorCache)((ValueGeneratorSelector)this).Cache;
 
-		public DmValueGeneratorSelector([JetBrains.Annotations.NotNull] ValueGeneratorSelectorDependencies dependencies, [JetBrains.Annotations.NotNull] IDmSequenceValueGeneratorFactory sequenceFactory, [JetBrains.Annotations.NotNull] IDmRelationalConnection connection, [JetBrains.Annotations.NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [JetBrains.Annotations.NotNull] IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger)
+		public DmValueGeneratorSelector([NotNull] ValueGeneratorSelectorDependencies dependencies, [NotNull] IDmSequenceValueGeneratorFactory sequenceFactory, [NotNull] IDmRelationalConnection connection, [NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [NotNull] IRelationalCommandDiagnosticsLogger commandLogger)
 			: base(dependencies)
 		{
 			_sequenceFactory = sequenceFactory;
@@ -32,16 +32,19 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 
 		public override ValueGenerator Select(IProperty property, IEntityType entityType)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(property, "property");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(entityType, "entityType");
-			return (property.GetValueGeneratorFactory() == null && property.GetValueGenerationStrategy() == DmValueGenerationStrategy.SequenceHiLo) ? _sequenceFactory.Create(property, Cache.GetOrAddSequenceState(property), _connection, _rawSqlCommandBuilder, _commandLogger) : base.Select(property, entityType);
+			Check.NotNull<IProperty>(property, "property");
+			Check.NotNull<IEntityType>(entityType, "entityType");
+			return (ValueGenerator)((((IReadOnlyProperty)property).GetValueGeneratorFactory() == null && ((IReadOnlyProperty)(object)property).GetValueGenerationStrategy() == DmValueGenerationStrategy.SequenceHiLo) ? ((object)_sequenceFactory.Create(property, Cache.GetOrAddSequenceState(property), _connection, _rawSqlCommandBuilder, _commandLogger)) : ((object)((ValueGeneratorSelector)this).Select(property, entityType)));
 		}
 
 		public override ValueGenerator Create(IProperty property, IEntityType entityType)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(property, "property");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(entityType, "entityType");
-			return (!(property.ClrType.UnwrapNullableType() == typeof(Guid))) ? base.Create(property, entityType) : ((property.ValueGenerated == ValueGenerated.Never || property.GetDefaultValueSql() != null) ? new TemporaryGuidValueGenerator() : new GuidValueGenerator());
+			//IL_0040: Unknown result type (might be due to invalid IL or missing references)
+			//IL_004f: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0056: Unknown result type (might be due to invalid IL or missing references)
+			Check.NotNull<IProperty>(property, "property");
+			Check.NotNull<IEntityType>(entityType, "entityType");
+			return (ValueGenerator)((!(((IReadOnlyPropertyBase)property).ClrType.UnwrapNullableType() == typeof(Guid))) ? ((RelationalValueGeneratorSelector)this).Create(property, entityType) : (((int)((IReadOnlyProperty)property).ValueGenerated == 0 || RelationalPropertyExtensions.GetDefaultValueSql((IReadOnlyProperty)(object)property) != null) ? ((object)new TemporaryGuidValueGenerator()) : ((object)new GuidValueGenerator())));
 		}
 	}
 }

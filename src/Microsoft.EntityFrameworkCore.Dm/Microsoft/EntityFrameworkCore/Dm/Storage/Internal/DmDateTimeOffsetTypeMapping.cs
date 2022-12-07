@@ -11,7 +11,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		protected override string SqlLiteralFormatString => "'{0:yyyy-MM-dd HH:mm:ss.fffzzz}'";
 
-		public DmDateTimeOffsetTypeMapping([JetBrains.Annotations.NotNull] string storeType, DbType? dbType = System.Data.DbType.DateTimeOffset)
+		public DmDateTimeOffsetTypeMapping([NotNull] string storeType, DbType? dbType = System.Data.DbType.DateTimeOffset)
 			: base(storeType, dbType)
 		{
 		}
@@ -19,16 +19,25 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 		protected DmDateTimeOffsetTypeMapping(RelationalTypeMappingParameters parameters)
 			: base(parameters)
 		{
-		}
+		}//IL_0001: Unknown result type (might be due to invalid IL or missing references)
+
 
 		public override RelationalTypeMapping Clone(string storeType, int? size)
 		{
-			return new DmDateTimeOffsetTypeMapping(Parameters.WithStoreTypeAndSize(storeType, size));
+			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0006: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0014: Unknown result type (might be due to invalid IL or missing references)
+			RelationalTypeMappingParameters parameters = this.Parameters;
+			return (RelationalTypeMapping)(object)new DmDateTimeOffsetTypeMapping(((RelationalTypeMappingParameters)(parameters)).WithStoreTypeAndSize(storeType, size, (StoreTypePostfix?)null));
 		}
 
 		public override CoreTypeMapping Clone(ValueConverter converter)
 		{
-			return new DmDateTimeOffsetTypeMapping(Parameters.WithComposedConverter(converter));
+			//IL_0001: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0006: Unknown result type (might be due to invalid IL or missing references)
+			//IL_000a: Unknown result type (might be due to invalid IL or missing references)
+			RelationalTypeMappingParameters parameters = this.Parameters;
+			return (CoreTypeMapping)(object)new DmDateTimeOffsetTypeMapping(((RelationalTypeMappingParameters)(parameters)).WithComposedConverter(converter));
 		}
 	}
 }

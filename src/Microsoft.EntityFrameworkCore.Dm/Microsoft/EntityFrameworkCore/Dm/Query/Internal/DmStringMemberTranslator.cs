@@ -1,8 +1,11 @@
 using System;
+using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 {
@@ -17,9 +20,9 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual SqlExpression Translate(SqlExpression instance, MemberInfo member, Type returnType, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 		{
-			if (member.Name == "Length" && instance?.Type == typeof(string))
+			if (member.Name == "Length" && ((Expression)(object)instance)?.Type == typeof(string))
 			{
-				return _sqlExpressionFactory.Convert(_sqlExpressionFactory.Function("LENGTH", new SqlExpression[1] { instance }, nullable: true, new bool[1] { true }, typeof(long)), returnType);
+				return (SqlExpression)(object)_sqlExpressionFactory.Convert((SqlExpression)(object)_sqlExpressionFactory.Function("LENGTH", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { instance }, true, (IEnumerable<bool>)new bool[1] { true }, typeof(long), (RelationalTypeMapping)null), returnType, (RelationalTypeMapping)null);
 			}
 			return null;
 		}

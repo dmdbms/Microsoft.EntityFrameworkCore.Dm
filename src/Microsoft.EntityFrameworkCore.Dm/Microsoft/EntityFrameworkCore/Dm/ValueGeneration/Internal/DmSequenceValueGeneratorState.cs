@@ -7,10 +7,10 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 {
 	public class DmSequenceValueGeneratorState : HiLoValueGeneratorState
 	{
-		public virtual ISequence Sequence { get; }
+		public virtual IReadOnlySequence Sequence { get; }
 
-		public DmSequenceValueGeneratorState([JetBrains.Annotations.NotNull] ISequence sequence)
-			: base(Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(sequence, "sequence").IncrementBy)
+		public DmSequenceValueGeneratorState([NotNull] IReadOnlySequence sequence)
+			: base(Check.NotNull<IReadOnlySequence>(sequence, "sequence").IncrementBy)
 		{
 			Sequence = sequence;
 		}

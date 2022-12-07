@@ -7,6 +7,6 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 {
 	public interface IDmUpdateSqlGenerator : IUpdateSqlGenerator
 	{
-		ResultSetMapping AppendBulkInsertOperation([JetBrains.Annotations.NotNull] StringBuilder commandStringBuilder, [JetBrains.Annotations.NotNull] IReadOnlyList<ModificationCommand> modificationCommands, int commandPosition);
+		ResultSetMapping AppendBulkInsertOperation([NotNull] StringBuilder commandStringBuilder, [NotNull] IReadOnlyList<IReadOnlyModificationCommand> modificationCommands, int commandPosition);
 	}
 }

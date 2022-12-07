@@ -5,6 +5,7 @@ using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Dm.Extensions;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 {
@@ -25,7 +26,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 		{
-			return _methodInfo.Equals(method) ? _sqlExpressionFactory.Convert(_sqlExpressionFactory.Function("ISDATE", new SqlExpression[1] { arguments[1] }, nullable: true, new bool[1] { true }, _methodInfo.ReturnType), _methodInfo.ReturnType) : null;
+			return (SqlExpression)(object)(_methodInfo.Equals(method) ? _sqlExpressionFactory.Convert((SqlExpression)(object)_sqlExpressionFactory.Function("ISDATE", (IEnumerable<SqlExpression>)(object)new SqlExpression[1] { arguments[1] }, true, (IEnumerable<bool>)new bool[1] { true }, _methodInfo.ReturnType, (RelationalTypeMapping)null), _methodInfo.ReturnType, (RelationalTypeMapping)null) : null);
 		}
 	}
 }

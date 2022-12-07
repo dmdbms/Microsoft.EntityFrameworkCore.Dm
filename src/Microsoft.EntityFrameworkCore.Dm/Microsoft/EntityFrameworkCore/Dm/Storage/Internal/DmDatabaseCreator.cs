@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Dm;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Dm.Internal;
+using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Migrations.Operations;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -23,7 +24,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 		public virtual TimeSpan RetryTimeout { get; set; } = TimeSpan.FromMinutes(1.0);
 
 
-		public DmDatabaseCreator([JetBrains.Annotations.NotNull] RelationalDatabaseCreatorDependencies dependencies, [JetBrains.Annotations.NotNull] IDmRelationalConnection connection, [JetBrains.Annotations.NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder)
+		public DmDatabaseCreator([NotNull] RelationalDatabaseCreatorDependencies dependencies, [NotNull] IDmRelationalConnection connection, [NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder)
 			: base(dependencies)
 		{
 			_connection = connection;
@@ -32,24 +33,24 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		public override void Create()
 		{
-			using IDmRelationalConnection connection = _connection.CreateMasterConnection();
-			Dependencies.MigrationCommandExecutor.ExecuteNonQuery(CreateCreateOperations(), connection);
+			using IDmRelationalConnection dmRelationalConnection = _connection.CreateMasterConnection();
+			base.Dependencies.MigrationCommandExecutor.ExecuteNonQuery((IEnumerable<MigrationCommand>)CreateCreateOperations(), (IRelationalConnection)dmRelationalConnection);
 		}
 
 		public override async Task CreateAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			using IDmRelationalConnection masterConnection = _connection.CreateMasterConnection();
-			await Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync(CreateCreateOperations(), masterConnection, cancellationToken);
+			await base.Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync((IEnumerable<MigrationCommand>)CreateCreateOperations(), (IRelationalConnection)masterConnection, cancellationToken);
 		}
 
 		public override bool HasTables()
 		{
-			return Dependencies.ExecutionStrategyFactory.Create().Execute(_connection, (IDmRelationalConnection connection) => (int)CreateHasTablesCommand().ExecuteScalar(new RelationalCommandParameterObject(connection, null, null, Dependencies.CurrentContext.Context, Dependencies.CommandLogger)) != 0);
+			return ExecutionStrategyExtensions.Execute<IDmRelationalConnection, bool>(base.Dependencies.ExecutionStrategyFactory.Create(), _connection, (Func<IDmRelationalConnection, bool>)((IDmRelationalConnection connection) => (int)CreateHasTablesCommand().ExecuteScalar(new RelationalCommandParameterObject((IRelationalConnection)connection, (IReadOnlyDictionary<string, object>)null, (IReadOnlyList<ReaderColumn>)null, base.Dependencies.CurrentContext.Context, base.Dependencies.CommandLogger)) != 0));
 		}
 
 		public override Task<bool> HasTablesAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return Dependencies.ExecutionStrategyFactory.Create().ExecuteAsync(_connection, async (IDmRelationalConnection connection, CancellationToken ct) => (int)(await CreateHasTablesCommand().ExecuteScalarAsync(new RelationalCommandParameterObject(connection, null, null, Dependencies.CurrentContext.Context, Dependencies.CommandLogger), ct)) != 0, cancellationToken);
+			return ExecutionStrategyExtensions.ExecuteAsync<IDmRelationalConnection, bool>(base.Dependencies.ExecutionStrategyFactory.Create(), _connection, (Func<IDmRelationalConnection, CancellationToken, Task<bool>>)(async (IDmRelationalConnection connection, CancellationToken ct) => (int)(await CreateHasTablesCommand().ExecuteScalarAsync(new RelationalCommandParameterObject((IRelationalConnection)connection, (IReadOnlyDictionary<string, object>)null, (IReadOnlyList<ReaderColumn>)null, base.Dependencies.CurrentContext.Context, base.Dependencies.CommandLogger), ct)) != 0), cancellationToken);
 		}
 
 		private IRelationalCommand CreateHasTablesCommand()
@@ -59,23 +60,25 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		private IReadOnlyList<MigrationCommand> CreateCreateOperations()
 		{
-			DmConnectionStringBuilder dmConnectionStringBuilder = new DmConnectionStringBuilder(_connection.DbConnection.ConnectionString);
-			return Dependencies.MigrationsSqlGenerator.Generate(new DmCreateUserOperation[1]
+			//IL_0011: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0017: Expected O, but got Unknown
+			DmConnectionStringBuilder val = new DmConnectionStringBuilder(((IRelationalConnection)_connection).DbConnection.ConnectionString);
+			return base.Dependencies.MigrationsSqlGenerator.Generate((IReadOnlyList<MigrationOperation>)(object)new DmCreateUserOperation[1]
 			{
 				new DmCreateUserOperation
 				{
-					UserName = dmConnectionStringBuilder.User,
-					Password = dmConnectionStringBuilder.Password
+					UserName = val.User,
+					Password = val.Password
 				}
-			});
+			}, (IModel)null, (MigrationsSqlGenerationOptions)0);
 		}
 
 		public override bool Exists()
 		{
 			try
 			{
-				_connection.Open(errorsExpected: true);
-				_connection.Close();
+				((IRelationalConnection)_connection).Open(true);
+				((IRelationalConnection)_connection).Close();
 				return true;
 			}
 			catch (DmException)
@@ -88,8 +91,8 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 		{
 			try
 			{
-				await _connection.OpenAsync(cancellationToken, errorsExpected: true);
-				_connection.Close();
+				await ((IRelationalConnection)_connection).OpenAsync(cancellationToken, true);
+				((IRelationalConnection)_connection).Close();
 				return true;
 			}
 			catch (DmException)
@@ -114,31 +117,32 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		public override void Delete()
 		{
-			using IDmRelationalConnection connection = _connection.CreateMasterConnection();
-			Dependencies.MigrationCommandExecutor.ExecuteNonQuery(CreateDropCommands(), connection);
+			using IDmRelationalConnection dmRelationalConnection = _connection.CreateMasterConnection();
+			base.Dependencies.MigrationCommandExecutor.ExecuteNonQuery((IEnumerable<MigrationCommand>)CreateDropCommands(), (IRelationalConnection)dmRelationalConnection);
 		}
 
 		public override async Task DeleteAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
 			using IDmRelationalConnection masterConnection = _connection.CreateMasterConnection();
-			await Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync(CreateDropCommands(), masterConnection, cancellationToken);
+			await base.Dependencies.MigrationCommandExecutor.ExecuteNonQueryAsync((IEnumerable<MigrationCommand>)CreateDropCommands(), (IRelationalConnection)masterConnection, cancellationToken);
 		}
 
 		private IReadOnlyList<MigrationCommand> CreateDropCommands()
 		{
-			string user = new DmConnectionStringBuilder(_connection.DbConnection.ConnectionString).User;
+			//IL_0011: Unknown result type (might be due to invalid IL or missing references)
+			string user = new DmConnectionStringBuilder(((IRelationalConnection)_connection).DbConnection.ConnectionString).User;
 			if (string.IsNullOrEmpty(user))
 			{
 				throw new InvalidOperationException(DmStrings.NoUserId);
 			}
-			MigrationOperation[] operations = new MigrationOperation[1]
+			MigrationOperation[] array = (MigrationOperation[])(object)new MigrationOperation[1]
 			{
 				new DmDropUserOperation
 				{
 					UserName = user
 				}
 			};
-			return Dependencies.MigrationsSqlGenerator.Generate(operations);
+			return base.Dependencies.MigrationsSqlGenerator.Generate((IReadOnlyList<MigrationOperation>)array, (IModel)null, (MigrationsSqlGenerationOptions)0);
 		}
 	}
 }

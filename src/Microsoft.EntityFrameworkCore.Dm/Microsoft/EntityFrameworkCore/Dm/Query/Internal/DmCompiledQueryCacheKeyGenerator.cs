@@ -12,6 +12,8 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 			public DmCompiledQueryCacheKey(RelationalCompiledQueryCacheKey relationalCompiledQueryCacheKey)
 			{
+				//IL_0002: Unknown result type (might be due to invalid IL or missing references)
+				//IL_0003: Unknown result type (might be due to invalid IL or missing references)
 				_relationalCompiledQueryCacheKey = relationalCompiledQueryCacheKey;
 			}
 
@@ -22,23 +24,25 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 			private bool Equals(DmCompiledQueryCacheKey other)
 			{
-				return _relationalCompiledQueryCacheKey.Equals(other._relationalCompiledQueryCacheKey);
+				//IL_0007: Unknown result type (might be due to invalid IL or missing references)
+				return ((RelationalCompiledQueryCacheKey)(_relationalCompiledQueryCacheKey)).Equals(other._relationalCompiledQueryCacheKey);
 			}
 
 			public override int GetHashCode()
 			{
-				return _relationalCompiledQueryCacheKey.GetHashCode();
+				return ((object)(RelationalCompiledQueryCacheKey)(_relationalCompiledQueryCacheKey)).GetHashCode();
 			}
 		}
 
-		public DmCompiledQueryCacheKeyGenerator([JetBrains.Annotations.NotNull] CompiledQueryCacheKeyGeneratorDependencies dependencies, [JetBrains.Annotations.NotNull] RelationalCompiledQueryCacheKeyGeneratorDependencies relationalDependencies)
+		public DmCompiledQueryCacheKeyGenerator([NotNull] CompiledQueryCacheKeyGeneratorDependencies dependencies, [NotNull] RelationalCompiledQueryCacheKeyGeneratorDependencies relationalDependencies)
 			: base(dependencies, relationalDependencies)
 		{
 		}
 
 		public override object GenerateCacheKey(Expression query, bool async)
 		{
-			return new DmCompiledQueryCacheKey(GenerateCacheKeyCore(query, async));
+			//IL_0003: Unknown result type (might be due to invalid IL or missing references)
+			return new DmCompiledQueryCacheKey(base.GenerateCacheKeyCore(query, async));
 		}
 	}
 }

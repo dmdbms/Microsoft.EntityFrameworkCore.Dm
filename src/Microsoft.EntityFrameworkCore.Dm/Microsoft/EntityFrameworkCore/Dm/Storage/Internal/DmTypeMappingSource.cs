@@ -3,6 +3,7 @@ using System.Collections;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Linq.Expressions;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.ChangeTracking;
 using Microsoft.EntityFrameworkCore.Storage;
@@ -11,17 +12,17 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 {
 	public class DmTypeMappingSource : RelationalTypeMappingSource
 	{
-		private readonly DmByteArrayTypeMapping _rowversion = new DmByteArrayTypeMapping("BINARY(8)", DbType.Binary, 8, fixedLength: false, new ValueComparer<byte[]>((byte[] v1, byte[] v2) => StructuralComparisons.StructuralEqualityComparer.Equals(v1, v2), (byte[] v) => StructuralComparisons.StructuralEqualityComparer.GetHashCode(v), (byte[] v) => (v == null) ? null : v.ToArray()), StoreTypePostfix.None);
+		private readonly DmByteArrayTypeMapping _rowversion = new DmByteArrayTypeMapping("BINARY(8)", DbType.Binary, 8, fixedLength: false, (ValueComparer)(object)new ValueComparer<byte[]>((Expression<Func<byte[], byte[], bool>>)((byte[] v1, byte[] v2) => StructuralComparisons.StructuralEqualityComparer.Equals(v1, v2)), (Expression<Func<byte[], int>>)((byte[] v) => StructuralComparisons.StructuralEqualityComparer.GetHashCode(v)), (Expression<Func<byte[], byte[]>>)((byte[] v) => (v == null) ? null : v.ToArray())), (StoreTypePostfix)0);
 
-		private readonly IntTypeMapping _int = new IntTypeMapping("INT", DbType.Int32);
+		private readonly IntTypeMapping _int = new IntTypeMapping("INT", (DbType?)DbType.Int32);
 
-		private readonly LongTypeMapping _long = new LongTypeMapping("BIGINT", DbType.Int64);
+		private readonly LongTypeMapping _long = new LongTypeMapping("BIGINT", (DbType?)DbType.Int64);
 
-		private readonly ShortTypeMapping _short = new ShortTypeMapping("SMALLINT", DbType.Int16);
+		private readonly ShortTypeMapping _short = new ShortTypeMapping("SMALLINT", (DbType?)DbType.Int16);
 
-		private readonly ByteTypeMapping _byte = new DmByteTypeMapping("TINYINT", DbType.Byte);
+		private readonly ByteTypeMapping _byte = (ByteTypeMapping)(object)new DmByteTypeMapping("TINYINT", DbType.Byte);
 
-		private readonly BoolTypeMapping _bool = new BoolTypeMapping("BIT", DbType.Boolean);
+		private readonly BoolTypeMapping _bool = new BoolTypeMapping("BIT", (DbType?)DbType.Boolean);
 
 		private readonly DmStringTypeMapping _fixedLengthUnicodeString = new DmStringTypeMapping("NCHAR", DbType.String, unicode: true, null, fixedLength: true);
 
@@ -41,19 +42,19 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		private readonly DmDateTimeTypeMapping _datetime2 = new DmDateTimeTypeMapping("TIMESTAMP", DbType.DateTime2);
 
-		private readonly DoubleTypeMapping _double = new DmDoubleTypeMapping("FLOAT", DbType.Double);
+		private readonly DoubleTypeMapping _double = (DoubleTypeMapping)(object)new DmDoubleTypeMapping("FLOAT", DbType.Double);
 
 		private readonly DmDateTimeOffsetTypeMapping _datetimeoffset = new DmDateTimeOffsetTypeMapping("DATETIME WITH TIME ZONE", DbType.DateTimeOffset);
 
 		private readonly DmDateTimeOffsetTypeMapping _datetimeoffset3 = new DmDateTimeOffsetTypeMapping("DATETIME(3) WITH TIME ZONE", DbType.DateTimeOffset);
 
-		private readonly FloatTypeMapping _real = new DmFloatTypeMapping("REAL", DbType.Single);
+		private readonly FloatTypeMapping _real = (FloatTypeMapping)(object)new DmFloatTypeMapping("REAL", DbType.Single);
 
-		private readonly GuidTypeMapping _guid = new GuidTypeMapping("VARCHAR(36)", DbType.Guid);
+		private readonly GuidTypeMapping _guid = new GuidTypeMapping("VARCHAR(36)", (DbType?)DbType.Guid);
 
-		private readonly DecimalTypeMapping _decimal = new DmDecimalTypeMapping("DECIMAL(29, 4)", DbType.Decimal, 29, 4);
+		private readonly DecimalTypeMapping _decimal = (DecimalTypeMapping)(object)new DmDecimalTypeMapping("DECIMAL(29, 4)", DbType.Decimal, 29, 4);
 
-		private readonly TimeSpanTypeMapping _intervaldt = new DmTimeSpanTypeMapping("INTERVAL DAY TO SECOND");
+		private readonly TimeSpanTypeMapping _intervaldt = (TimeSpanTypeMapping)(object)new DmTimeSpanTypeMapping("INTERVAL DAY TO SECOND");
 
 		private readonly DmStringTypeMapping _xml = new DmStringTypeMapping("VARCHAR(8188)", DbType.String);
 
@@ -63,104 +64,243 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		private readonly HashSet<string> _disallowedMappings;
 
-		public DmTypeMappingSource([JetBrains.Annotations.NotNull] TypeMappingSourceDependencies dependencies, [JetBrains.Annotations.NotNull] RelationalTypeMappingSourceDependencies relationalDependencies)
+		public DmTypeMappingSource([NotNull] TypeMappingSourceDependencies dependencies, [NotNull] RelationalTypeMappingSourceDependencies relationalDependencies)
 			: base(dependencies, relationalDependencies)
 		{
+			//IL_016e: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0178: Expected O, but got Unknown
+			//IL_0185: Unknown result type (might be due to invalid IL or missing references)
+			//IL_018f: Expected O, but got Unknown
+			//IL_019c: Unknown result type (might be due to invalid IL or missing references)
+			//IL_01a6: Expected O, but got Unknown
+			//IL_01c8: Unknown result type (might be due to invalid IL or missing references)
+			//IL_01d2: Expected O, but got Unknown
+			//IL_037e: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0388: Expected O, but got Unknown
 			_storeTypeMappings = new Dictionary<string, RelationalTypeMapping>(StringComparer.OrdinalIgnoreCase)
 			{
-				{ "bigint", _long },
-				{ "binary varying", _variableLengthBinary },
-				{ "binary", _fixedLengthBinary },
-				{ "bit", _bool },
-				{ "char varying", _variableLengthAnsiString },
-				{ "char", _fixedLengthAnsiString },
-				{ "character varying", _variableLengthAnsiString },
-				{ "character", _fixedLengthAnsiString },
-				{ "date", _date },
-				{ "datetime", _datetime },
-				{ "datetime2", _datetime2 },
-				{ "datetime with time zone", _datetimeoffset },
-				{ "timestamp with time zone", _datetimeoffset },
-				{ "datetime(3) with time zone", _datetimeoffset3 },
-				{ "timestamp(3) with time zone", _datetimeoffset3 },
-				{ "dec", _decimal },
-				{ "decimal", _decimal },
-				{ "float", _double },
-				{ "image", _variableLengthBinary },
-				{ "int", _int },
-				{ "money", _decimal },
-				{ "national char varying", _variableLengthUnicodeString },
-				{ "national character varying", _variableLengthUnicodeString },
-				{ "national character", _fixedLengthUnicodeString },
-				{ "nchar", _fixedLengthUnicodeString },
-				{ "ntext", _variableLengthUnicodeString },
-				{ "numeric", _decimal },
-				{ "nvarchar", _variableLengthUnicodeString },
-				{ "real", _real },
-				{ "rowversion", _rowversion },
-				{ "smalldatetime", _datetime },
-				{ "smallint", _short },
-				{ "smallmoney", _decimal },
-				{ "text", _variableLengthAnsiString },
-				{ "clob", _variableLengthAnsiString },
-				{ "interval day to second", _intervaldt },
-				{ "timestamp", _datetime },
-				{ "tinyint", _byte },
-				{ "varchar(36)", _guid },
-				{ "varbinary", _variableLengthBinary },
-				{ "blob", _variableLengthBinary },
-				{ "varchar", _variableLengthAnsiString },
-				{ "xml", _xml }
+				{
+					"bigint",
+					(RelationalTypeMapping)(object)_long
+				},
+				{
+					"binary varying",
+					(RelationalTypeMapping)(object)_variableLengthBinary
+				},
+				{
+					"binary",
+					(RelationalTypeMapping)(object)_fixedLengthBinary
+				},
+				{
+					"bit",
+					(RelationalTypeMapping)(object)_bool
+				},
+				{
+					"char varying",
+					(RelationalTypeMapping)(object)_variableLengthAnsiString
+				},
+				{
+					"char",
+					(RelationalTypeMapping)(object)_fixedLengthAnsiString
+				},
+				{
+					"character varying",
+					(RelationalTypeMapping)(object)_variableLengthAnsiString
+				},
+				{
+					"character",
+					(RelationalTypeMapping)(object)_fixedLengthAnsiString
+				},
+				{
+					"date",
+					(RelationalTypeMapping)(object)_date
+				},
+				{
+					"datetime",
+					(RelationalTypeMapping)(object)_datetime
+				},
+				{
+					"datetime2",
+					(RelationalTypeMapping)(object)_datetime2
+				},
+				{
+					"datetime with time zone",
+					(RelationalTypeMapping)(object)_datetimeoffset
+				},
+				{
+					"timestamp with time zone",
+					(RelationalTypeMapping)(object)_datetimeoffset
+				},
+				{
+					"datetime(3) with time zone",
+					(RelationalTypeMapping)(object)_datetimeoffset3
+				},
+				{
+					"timestamp(3) with time zone",
+					(RelationalTypeMapping)(object)_datetimeoffset3
+				},
+				{
+					"dec",
+					(RelationalTypeMapping)(object)_decimal
+				},
+				{
+					"decimal",
+					(RelationalTypeMapping)(object)_decimal
+				},
+				{
+					"float",
+					(RelationalTypeMapping)(object)_double
+				},
+				{
+					"image",
+					(RelationalTypeMapping)(object)_variableLengthBinary
+				},
+				{
+					"int",
+					(RelationalTypeMapping)(object)_int
+				},
+				{
+					"money",
+					(RelationalTypeMapping)(object)_decimal
+				},
+				{
+					"national char varying",
+					(RelationalTypeMapping)(object)_variableLengthUnicodeString
+				},
+				{
+					"national character varying",
+					(RelationalTypeMapping)(object)_variableLengthUnicodeString
+				},
+				{
+					"national character",
+					(RelationalTypeMapping)(object)_fixedLengthUnicodeString
+				},
+				{
+					"nchar",
+					(RelationalTypeMapping)(object)_fixedLengthUnicodeString
+				},
+				{
+					"ntext",
+					(RelationalTypeMapping)(object)_variableLengthUnicodeString
+				},
+				{
+					"numeric",
+					(RelationalTypeMapping)(object)_decimal
+				},
+				{
+					"nvarchar",
+					(RelationalTypeMapping)(object)_variableLengthUnicodeString
+				},
+				{
+					"real",
+					(RelationalTypeMapping)(object)_real
+				},
+				{
+					"rowversion",
+					(RelationalTypeMapping)(object)_rowversion
+				},
+				{
+					"smalldatetime",
+					(RelationalTypeMapping)(object)_datetime
+				},
+				{
+					"smallint",
+					(RelationalTypeMapping)(object)_short
+				},
+				{
+					"smallmoney",
+					(RelationalTypeMapping)(object)_decimal
+				},
+				{
+					"text",
+					(RelationalTypeMapping)(object)_variableLengthAnsiString
+				},
+				{
+					"clob",
+					(RelationalTypeMapping)(object)_variableLengthAnsiString
+				},
+				{
+					"interval day to second",
+					(RelationalTypeMapping)(object)_intervaldt
+				},
+				{
+					"timestamp",
+					(RelationalTypeMapping)(object)_datetime
+				},
+				{
+					"tinyint",
+					(RelationalTypeMapping)(object)_byte
+				},
+				{
+					"varchar(36)",
+					(RelationalTypeMapping)(object)_guid
+				},
+				{
+					"varbinary",
+					(RelationalTypeMapping)(object)_variableLengthBinary
+				},
+				{
+					"blob",
+					(RelationalTypeMapping)(object)_variableLengthBinary
+				},
+				{
+					"varchar",
+					(RelationalTypeMapping)(object)_variableLengthAnsiString
+				},
+				{
+					"xml",
+					(RelationalTypeMapping)(object)_xml
+				}
 			};
 			_clrTypeMappings = new Dictionary<Type, RelationalTypeMapping>
 			{
 				{
 					typeof(int),
-					_int
+					(RelationalTypeMapping)(object)_int
 				},
 				{
 					typeof(long),
-					_long
+					(RelationalTypeMapping)(object)_long
 				},
 				{
 					typeof(DateTime),
-					_datetime2
+					(RelationalTypeMapping)(object)_datetime2
 				},
 				{
 					typeof(Guid),
-					_guid
+					(RelationalTypeMapping)(object)_guid
 				},
 				{
 					typeof(bool),
-					_bool
+					(RelationalTypeMapping)(object)_bool
 				},
 				{
 					typeof(byte),
-					_byte
+					(RelationalTypeMapping)(object)_byte
 				},
 				{
 					typeof(double),
-					_double
+					(RelationalTypeMapping)(object)_double
 				},
 				{
 					typeof(DateTimeOffset),
-					_datetimeoffset
+					(RelationalTypeMapping)(object)_datetimeoffset
 				},
 				{
 					typeof(short),
-					_short
+					(RelationalTypeMapping)(object)_short
 				},
 				{
 					typeof(float),
-					_real
+					(RelationalTypeMapping)(object)_real
 				},
 				{
 					typeof(decimal),
-					_decimal
+					(RelationalTypeMapping)(object)_decimal
 				},
 				{
 					typeof(TimeSpan),
-					_intervaldt
+					(RelationalTypeMapping)(object)_intervaldt
 				}
 			};
 			_disallowedMappings = new HashSet<string>(StringComparer.OrdinalIgnoreCase)
@@ -172,23 +312,28 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		protected override RelationalTypeMapping FindMapping(in RelationalTypeMappingInfo mappingInfo)
 		{
-			return FindRawMapping(mappingInfo)?.Clone(in mappingInfo);
+			//IL_0002: Unknown result type (might be due to invalid IL or missing references)
+			RelationalTypeMapping obj = FindRawMapping(mappingInfo);
+			return (obj != null) ? obj.Clone(mappingInfo) : null;
 		}
 
 		private RelationalTypeMapping FindRawMapping(RelationalTypeMappingInfo mappingInfo)
 		{
-			Type clrType = mappingInfo.ClrType;
-			string storeTypeName = mappingInfo.StoreTypeName;
-			string storeTypeNameBase = mappingInfo.StoreTypeNameBase;
+			//IL_0244: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0248: Unknown result type (might be due to invalid IL or missing references)
+			//IL_024d: Unknown result type (might be due to invalid IL or missing references)
+			Type clrType = ((RelationalTypeMappingInfo)(mappingInfo)).ClrType;
+			string storeTypeName = ((RelationalTypeMappingInfo)(mappingInfo)).StoreTypeName;
+			string storeTypeNameBase = ((RelationalTypeMappingInfo)(mappingInfo)).StoreTypeNameBase;
 			if (storeTypeName != null)
 			{
-				if (clrType == typeof(float) && mappingInfo.Size.HasValue && mappingInfo.Size <= 24 && (storeTypeNameBase.Equals("float", StringComparison.OrdinalIgnoreCase) || storeTypeNameBase.Equals("double precision", StringComparison.OrdinalIgnoreCase)))
+				if (clrType == typeof(float) && ((RelationalTypeMappingInfo)(mappingInfo)).Size.HasValue && ((RelationalTypeMappingInfo)(mappingInfo)).Size <= 24 && (storeTypeNameBase.Equals("float", StringComparison.OrdinalIgnoreCase) || storeTypeNameBase.Equals("double precision", StringComparison.OrdinalIgnoreCase)))
 				{
-					return _real;
+					return (RelationalTypeMapping)(object)_real;
 				}
 				if (_storeTypeMappings.TryGetValue(storeTypeName, out var value) || _storeTypeMappings.TryGetValue(storeTypeNameBase, out value))
 				{
-					return (clrType == null || value.ClrType == clrType) ? value : null;
+					return (clrType == null || ((CoreTypeMapping)value).ClrType == clrType) ? value : null;
 				}
 			}
 			if (clrType != null)
@@ -199,20 +344,20 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 				}
 				if (clrType == typeof(string))
 				{
-					bool flag = mappingInfo.IsUnicode == false;
-					bool flag2 = mappingInfo.IsFixedLength == true;
+					bool flag = ((RelationalTypeMappingInfo)(mappingInfo)).IsUnicode == false;
+					bool flag2 = ((RelationalTypeMappingInfo)(mappingInfo)).IsFixedLength == true;
 					string text = (flag ? "" : "N") + (flag2 ? "CHAR" : "VARCHAR2");
 					string text2 = (flag ? "CLOB" : "NCLOB");
 					int num = (flag ? 8188 : 8188);
-					StoreTypePostfix? storeTypePostfix = null;
-					int? num2 = mappingInfo.Size ?? ((!mappingInfo.IsKeyOrIndex) ? num : (flag ? 900 : 450));
+					StoreTypePostfix? val = null;
+					int? num2 = ((RelationalTypeMappingInfo)(mappingInfo)).Size ?? ((!((RelationalTypeMappingInfo)(mappingInfo)).IsKeyOrIndex) ? num : (flag ? 900 : 450));
 					if (num2 > num)
 					{
 						num2 = null;
-						storeTypePostfix = StoreTypePostfix.None;
+						val = (StoreTypePostfix)0;
 					}
 					object storeType;
-					if (storeTypePostfix != StoreTypePostfix.None)
+					if (val != (StoreTypePostfix?)0)
 					{
 						int? num3 = num2;
 						storeType = text + "(" + num3 + ")";
@@ -221,23 +366,23 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 					{
 						storeType = "VARCHAR(8188)";
 					}
-					return new DmStringTypeMapping((string)storeType, flag ? new DbType?(DbType.AnsiString) : null, !flag, num2, flag2, storeTypePostfix);
+					return (RelationalTypeMapping)(object)new DmStringTypeMapping((string)storeType, flag ? new DbType?(DbType.AnsiString) : null, !flag, num2, flag2, val);
 				}
 				if (clrType == typeof(byte[]))
 				{
-					if (mappingInfo.IsRowVersion == true)
+					if (((RelationalTypeMappingInfo)(mappingInfo)).IsRowVersion == true)
 					{
-						return _rowversion;
+						return (RelationalTypeMapping)(object)_rowversion;
 					}
-					int? num4 = mappingInfo.Size ?? (mappingInfo.IsKeyOrIndex ? new int?(900) : null);
-					StoreTypePostfix? storeTypePostfix2 = null;
+					int? num4 = ((RelationalTypeMappingInfo)(mappingInfo)).Size ?? (((RelationalTypeMappingInfo)(mappingInfo)).IsKeyOrIndex ? new int?(900) : null);
+					StoreTypePostfix? storeTypePostfix = null;
 					if (num4 > 8188)
 					{
 						num4 = null;
-						storeTypePostfix2 = StoreTypePostfix.None;
+						storeTypePostfix = (StoreTypePostfix)0;
 					}
 					object storeType2;
-					if (mappingInfo.IsFixedLength != true)
+					if (((RelationalTypeMappingInfo)(mappingInfo)).IsFixedLength != true)
 					{
 						object obj;
 						if (num4 != -1 && num4.HasValue)
@@ -256,7 +401,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 					{
 						storeType2 = "BINARY(";
 					}
-					return new DmByteArrayTypeMapping((string)storeType2, DbType.Binary, num4, fixedLength: false, null, storeTypePostfix2);
+					return (RelationalTypeMapping)(object)new DmByteArrayTypeMapping((string)storeType2, DbType.Binary, num4, fixedLength: false, null, storeTypePostfix);
 				}
 			}
 			return null;

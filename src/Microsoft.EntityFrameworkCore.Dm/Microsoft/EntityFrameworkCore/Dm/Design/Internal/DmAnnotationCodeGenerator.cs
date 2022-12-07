@@ -8,15 +8,15 @@ namespace Microsoft.EntityFrameworkCore.Dm.Design.Internal
 {
 	public class DmAnnotationCodeGenerator : AnnotationCodeGenerator
 	{
-		public DmAnnotationCodeGenerator([JetBrains.Annotations.NotNull] AnnotationCodeGeneratorDependencies dependencies)
+		public DmAnnotationCodeGenerator([NotNull] AnnotationCodeGeneratorDependencies dependencies)
 			: base(dependencies)
 		{
 		}
 
 		protected override bool IsHandledByConvention(IModel model, IAnnotation annotation)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(model, "model");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(annotation, "annotation");
+			Check.NotNull<IModel>(model, "model");
+			Check.NotNull<IAnnotation>(annotation, "annotation");
 			if (annotation.Name == "Relational:DefaultSchema" && string.Equals("SYSDBA", (string)annotation.Value))
 			{
 				return true;

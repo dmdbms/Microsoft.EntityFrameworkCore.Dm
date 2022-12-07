@@ -5,14 +5,14 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 {
 	public class DmExecutionStrategyFactory : RelationalExecutionStrategyFactory
 	{
-		public DmExecutionStrategyFactory([JetBrains.Annotations.NotNull] ExecutionStrategyDependencies dependencies)
+		public DmExecutionStrategyFactory([NotNull] ExecutionStrategyDependencies dependencies)
 			: base(dependencies)
 		{
 		}
 
 		protected override IExecutionStrategy CreateDefaultStrategy(ExecutionStrategyDependencies dependencies)
 		{
-			return new DmExecutionStrategy(dependencies);
+			return (IExecutionStrategy)(object)new DmExecutionStrategy(dependencies);
 		}
 	}
 }

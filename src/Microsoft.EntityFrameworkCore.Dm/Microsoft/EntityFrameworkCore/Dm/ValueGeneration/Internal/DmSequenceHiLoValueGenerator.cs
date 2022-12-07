@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Globalization;
 using System.Threading;
 using System.Threading.Tasks;
@@ -8,6 +9,7 @@ using Microsoft.EntityFrameworkCore.Dm.Storage.Internal;
 using Microsoft.EntityFrameworkCore.Dm.Update.Internal;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
+using Microsoft.EntityFrameworkCore.Update;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
 
 namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
@@ -20,14 +22,14 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 
 		private readonly IDmRelationalConnection _connection;
 
-		private readonly ISequence _sequence;
+		private readonly IReadOnlySequence _sequence;
 
-		private readonly IDiagnosticsLogger<DbLoggerCategory.Database.Command> _commandLogger;
+		private readonly IRelationalCommandDiagnosticsLogger _commandLogger;
 
 		public override bool GeneratesTemporaryValues => false;
 
-		public DmSequenceHiLoValueGenerator([JetBrains.Annotations.NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [JetBrains.Annotations.NotNull] IDmUpdateSqlGenerator sqlGenerator, [JetBrains.Annotations.NotNull] DmSequenceValueGeneratorState generatorState, [JetBrains.Annotations.NotNull] IDmRelationalConnection connection, [JetBrains.Annotations.NotNull] IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger)
-			: base((HiLoValueGeneratorState)generatorState)
+		public DmSequenceHiLoValueGenerator([NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [NotNull] IDmUpdateSqlGenerator sqlGenerator, [NotNull] DmSequenceValueGeneratorState generatorState, [NotNull] IDmRelationalConnection connection, [NotNull] IRelationalCommandDiagnosticsLogger commandLogger)
+			: base((HiLoValueGeneratorState)(object)generatorState)
 		{
 			_sequence = generatorState.Sequence;
 			_rawSqlCommandBuilder = rawSqlCommandBuilder;
@@ -38,12 +40,13 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 
 		protected override long GetNewLowValue()
 		{
-			return (long)Convert.ChangeType(_rawSqlCommandBuilder.Build(_sqlGenerator.GenerateNextSequenceValueOperation(_sequence.Name, _sequence.Schema)).ExecuteScalar(new RelationalCommandParameterObject(_connection, null, null, null, _commandLogger)), typeof(long), CultureInfo.InvariantCulture);
+			//IL_003c: Unknown result type (might be due to invalid IL or missing references)
+			return (long)Convert.ChangeType(_rawSqlCommandBuilder.Build(((IUpdateSqlGenerator)_sqlGenerator).GenerateNextSequenceValueOperation(_sequence.Name, _sequence.Schema)).ExecuteScalar(new RelationalCommandParameterObject((IRelationalConnection)_connection, (IReadOnlyDictionary<string, object>)null, (IReadOnlyList<ReaderColumn>)null, (DbContext)null, _commandLogger, (CommandSource)6)), typeof(long), CultureInfo.InvariantCulture);
 		}
 
 		protected override async Task<long> GetNewLowValueAsync(CancellationToken cancellationToken = default(CancellationToken))
 		{
-			return (long)Convert.ChangeType(await _rawSqlCommandBuilder.Build(_sqlGenerator.GenerateNextSequenceValueOperation(_sequence.Name, _sequence.Schema)).ExecuteScalarAsync(new RelationalCommandParameterObject(_connection, null, null, null, _commandLogger), cancellationToken), typeof(long), CultureInfo.InvariantCulture);
+			return (long)Convert.ChangeType(await _rawSqlCommandBuilder.Build(((IUpdateSqlGenerator)_sqlGenerator).GenerateNextSequenceValueOperation(_sequence.Name, _sequence.Schema)).ExecuteScalarAsync(new RelationalCommandParameterObject((IRelationalConnection)_connection, (IReadOnlyDictionary<string, object>)null, (IReadOnlyList<ReaderColumn>)null, (DbContext)null, _commandLogger), cancellationToken), typeof(long), CultureInfo.InvariantCulture);
 		}
 	}
 }

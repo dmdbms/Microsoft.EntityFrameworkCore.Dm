@@ -1,4 +1,6 @@
+#define DEBUG
 using System.Collections.Concurrent;
+using System.Diagnostics;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Utilities;
@@ -10,19 +12,20 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 	{
 		private readonly ConcurrentDictionary<string, DmSequenceValueGeneratorState> _sequenceGeneratorCache = new ConcurrentDictionary<string, DmSequenceValueGeneratorState>();
 
-		public DmValueGeneratorCache([JetBrains.Annotations.NotNull] ValueGeneratorCacheDependencies dependencies)
+		public DmValueGeneratorCache([NotNull] ValueGeneratorCacheDependencies dependencies)
 			: base(dependencies)
 		{
 		}
 
 		public virtual DmSequenceValueGeneratorState GetOrAddSequenceState(IProperty property)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(property, "property");
-			ISequence sequence = property.FindHiLoSequence();
+			Check.NotNull<IProperty>(property, "property");
+			IReadOnlySequence sequence = ((IReadOnlyProperty)(object)property).FindHiLoSequence();
+			Debug.Assert(sequence != null);
 			return _sequenceGeneratorCache.GetOrAdd(GetSequenceName(sequence), (string sequenceName) => new DmSequenceValueGeneratorState(sequence));
 		}
 
-		private static string GetSequenceName(ISequence sequence)
+		private static string GetSequenceName(IReadOnlySequence sequence)
 		{
 			return ((sequence.Schema == null) ? "" : (sequence.Schema + ".")) + sequence.Name;
 		}

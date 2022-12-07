@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		public virtual bool RetriesOnFailure => false;
 
-		public DmExecutionStrategy([JetBrains.Annotations.NotNull] ExecutionStrategyDependencies dependencies)
+		public DmExecutionStrategy([NotNull] ExecutionStrategyDependencies dependencies)
 		{
 			Dependencies = dependencies;
 		}
@@ -24,7 +24,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 			{
 				return operation(Dependencies.CurrentContext.Context, state);
 			}
-			catch (Exception ex) when (ExecutionStrategy.CallOnWrappedException(ex, DmTransientExceptionDetector.ShouldRetryOn))
+			catch (Exception ex) when (ExecutionStrategy.CallOnWrappedException<bool>(ex, (Func<Exception, bool>)DmTransientExceptionDetector.ShouldRetryOn))
 			{
 				throw new InvalidOperationException(DmStrings.TransientExceptionDetected, ex);
 			}
@@ -36,7 +36,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 			{
 				return await operation(Dependencies.CurrentContext.Context, state, cancellationToken);
 			}
-			catch (Exception ex) when (ExecutionStrategy.CallOnWrappedException(ex, DmTransientExceptionDetector.ShouldRetryOn))
+			catch (Exception ex) when (ExecutionStrategy.CallOnWrappedException<bool>(ex, (Func<Exception, bool>)DmTransientExceptionDetector.ShouldRetryOn))
 			{
 				throw new InvalidOperationException(DmStrings.TransientExceptionDetected, ex);
 			}

@@ -5,7 +5,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Migrations.Internal
 {
 	public class DmMigrationsAnnotationProvider : MigrationsAnnotationProvider
 	{
-		public DmMigrationsAnnotationProvider([JetBrains.Annotations.NotNull] MigrationsAnnotationProviderDependencies dependencies)
+		public DmMigrationsAnnotationProvider([NotNull] MigrationsAnnotationProviderDependencies dependencies)
 			: base(dependencies)
 		{
 		}

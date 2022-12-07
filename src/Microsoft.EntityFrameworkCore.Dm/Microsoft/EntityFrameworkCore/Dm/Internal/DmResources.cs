@@ -1,3 +1,4 @@
+using System;
 using System.Reflection;
 using System.Resources;
 using System.Threading;
@@ -12,144 +13,148 @@ namespace Microsoft.EntityFrameworkCore.Dm.Internal
 	{
 		private static readonly ResourceManager _resourceManager = new ResourceManager("Microsoft.EntityFrameworkCore.Dm.Properties.DmStrings", typeof(DmResources).GetTypeInfo().Assembly);
 
-		public static EventDefinition<string, string> LogDefaultDecimalTypeColumn([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string> LogDefaultDecimalTypeColumn([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogDefaultDecimalTypeColumn;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogDefaultDecimalTypeColumn;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogDefaultDecimalTypeColumn, () => new EventDefinition<string, string>(logger.Options, DmEventId.DecimalTypeDefaultWarning, LogLevel.Warning, "DmEventId.DecimalTypeDefaultWarning", (LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.DecimalTypeDefaultWarning, _resourceManager.GetString("LogDefaultDecimalTypeColumn"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogDefaultDecimalTypeColumn, () => (EventDefinitionBase)(object)new EventDefinition<string, string>(logger.Options, DmEventId.DecimalTypeDefaultWarning, LogLevel.Warning, "DmEventId.DecimalTypeDefaultWarning", (Func<LogLevel, Action<ILogger, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.DecimalTypeDefaultWarning, _resourceManager.GetString("LogDefaultDecimalTypeColumn")))));
 			}
-			return (EventDefinition<string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string>)(object)val;
 		}
 
-		public static EventDefinition<string, string> LogByteIdentityColumn([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string> LogByteIdentityColumn([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogByteIdentityColumn;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogByteIdentityColumn;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogByteIdentityColumn, () => new EventDefinition<string, string>(logger.Options, DmEventId.ByteIdentityColumnWarning, LogLevel.Warning, "DmEventId.ByteIdentityColumnWarning", (LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.ByteIdentityColumnWarning, _resourceManager.GetString("LogByteIdentityColumn"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogByteIdentityColumn, () => (EventDefinitionBase)(object)new EventDefinition<string, string>(logger.Options, DmEventId.ByteIdentityColumnWarning, LogLevel.Warning, "DmEventId.ByteIdentityColumnWarning", (Func<LogLevel, Action<ILogger, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.ByteIdentityColumnWarning, _resourceManager.GetString("LogByteIdentityColumn")))));
 			}
-			return (EventDefinition<string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string>)(object)val;
 		}
 
-		public static EventDefinition<string> LogFoundDefaultSchema([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string> LogFoundDefaultSchema([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundDefaultSchema;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundDefaultSchema;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundDefaultSchema, () => new EventDefinition<string>(logger.Options, DmEventId.DefaultSchemaFound, LogLevel.Debug, "DmEventId.DefaultSchemaFound", (LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.DefaultSchemaFound, _resourceManager.GetString("LogFoundDefaultSchema"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundDefaultSchema, () => (EventDefinitionBase)(object)new EventDefinition<string>(logger.Options, DmEventId.DefaultSchemaFound, LogLevel.Debug, "DmEventId.DefaultSchemaFound", (Func<LogLevel, Action<ILogger, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.DefaultSchemaFound, _resourceManager.GetString("LogFoundDefaultSchema")))));
 			}
-			return (EventDefinition<string>)eventDefinitionBase;
+			return (EventDefinition<string>)(object)val;
 		}
 
-		public static FallbackEventDefinition LogFoundColumn([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static FallbackEventDefinition LogFoundColumn([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundColumn;
-			if (eventDefinitionBase == null)
+			//IL_0056: Unknown result type (might be due to invalid IL or missing references)
+			//IL_005c: Expected O, but got Unknown
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundColumn;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundColumn, () => new FallbackEventDefinition(logger.Options, DmEventId.ColumnFound, LogLevel.Debug, "DmEventId.ColumnFound", _resourceManager.GetString("LogFoundColumn")));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundColumn, () => (EventDefinitionBase)new FallbackEventDefinition(logger.Options, DmEventId.ColumnFound, LogLevel.Debug, "DmEventId.ColumnFound", _resourceManager.GetString("LogFoundColumn")));
 			}
-			return (FallbackEventDefinition)eventDefinitionBase;
+			return (FallbackEventDefinition)val;
 		}
 
-		public static EventDefinition<string, string, string, string> LogFoundForeignKey([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string, string, string> LogFoundForeignKey([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundForeignKey;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundForeignKey;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundForeignKey, () => new EventDefinition<string, string, string, string>(logger.Options, DmEventId.ForeignKeyFound, LogLevel.Debug, "DmEventId.ForeignKeyFound", (LogLevel level) => LoggerMessage.Define<string, string, string, string>(level, DmEventId.ForeignKeyFound, _resourceManager.GetString("LogFoundForeignKey"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundForeignKey, () => (EventDefinitionBase)(object)new EventDefinition<string, string, string, string>(logger.Options, DmEventId.ForeignKeyFound, LogLevel.Debug, "DmEventId.ForeignKeyFound", (Func<LogLevel, Action<ILogger, string, string, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string, string, string>(level, DmEventId.ForeignKeyFound, _resourceManager.GetString("LogFoundForeignKey")))));
 			}
-			return (EventDefinition<string, string, string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string, string, string>)(object)val;
 		}
 
-		public static EventDefinition<string, string, bool> LogFoundIndex([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string, bool> LogFoundIndex([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundIndex;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundIndex;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundIndex, () => new EventDefinition<string, string, bool>(logger.Options, DmEventId.IndexFound, LogLevel.Debug, "DmEventId.IndexFound", (LogLevel level) => LoggerMessage.Define<string, string, bool>(level, DmEventId.IndexFound, _resourceManager.GetString("LogFoundIndex"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundIndex, () => (EventDefinitionBase)(object)new EventDefinition<string, string, bool>(logger.Options, DmEventId.IndexFound, LogLevel.Debug, "DmEventId.IndexFound", (Func<LogLevel, Action<ILogger, string, string, bool, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string, bool>(level, DmEventId.IndexFound, _resourceManager.GetString("LogFoundIndex")))));
 			}
-			return (EventDefinition<string, string, bool>)eventDefinitionBase;
+			return (EventDefinition<string, string, bool>)(object)val;
 		}
 
-		public static EventDefinition<string, string> LogFoundPrimaryKey([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string> LogFoundPrimaryKey([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundPrimaryKey;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundPrimaryKey;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundPrimaryKey, () => new EventDefinition<string, string>(logger.Options, DmEventId.PrimaryKeyFound, LogLevel.Debug, "DmEventId.PrimaryKeyFound", (LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.PrimaryKeyFound, _resourceManager.GetString("LogFoundPrimaryKey"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundPrimaryKey, () => (EventDefinitionBase)(object)new EventDefinition<string, string>(logger.Options, DmEventId.PrimaryKeyFound, LogLevel.Debug, "DmEventId.PrimaryKeyFound", (Func<LogLevel, Action<ILogger, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.PrimaryKeyFound, _resourceManager.GetString("LogFoundPrimaryKey")))));
 			}
-			return (EventDefinition<string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string>)(object)val;
 		}
 
-		public static EventDefinition<string> LogFoundTable([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string> LogFoundTable([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundTable;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundTable;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundTable, () => new EventDefinition<string>(logger.Options, DmEventId.TableFound, LogLevel.Debug, "DmEventId.TableFound", (LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.TableFound, _resourceManager.GetString("LogFoundTable"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundTable, () => (EventDefinitionBase)(object)new EventDefinition<string>(logger.Options, DmEventId.TableFound, LogLevel.Debug, "DmEventId.TableFound", (Func<LogLevel, Action<ILogger, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.TableFound, _resourceManager.GetString("LogFoundTable")))));
 			}
-			return (EventDefinition<string>)eventDefinitionBase;
+			return (EventDefinition<string>)(object)val;
 		}
 
-		public static EventDefinition<string, string> LogFoundUniqueConstraint([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string> LogFoundUniqueConstraint([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundUniqueConstraint;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundUniqueConstraint;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundUniqueConstraint, () => new EventDefinition<string, string>(logger.Options, DmEventId.UniqueConstraintFound, LogLevel.Debug, "DmEventId.UniqueConstraintFound", (LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.UniqueConstraintFound, _resourceManager.GetString("LogFoundUniqueConstraint"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundUniqueConstraint, () => (EventDefinitionBase)(object)new EventDefinition<string, string>(logger.Options, DmEventId.UniqueConstraintFound, LogLevel.Debug, "DmEventId.UniqueConstraintFound", (Func<LogLevel, Action<ILogger, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string>(level, DmEventId.UniqueConstraintFound, _resourceManager.GetString("LogFoundUniqueConstraint")))));
 			}
-			return (EventDefinition<string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string>)(object)val;
 		}
 
-		public static EventDefinition<string> LogMissingSchema([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string> LogMissingSchema([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogMissingSchema;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogMissingSchema;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogMissingSchema, () => new EventDefinition<string>(logger.Options, DmEventId.MissingSchemaWarning, LogLevel.Warning, "DmEventId.MissingSchemaWarning", (LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.MissingSchemaWarning, _resourceManager.GetString("LogMissingSchema"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogMissingSchema, () => (EventDefinitionBase)(object)new EventDefinition<string>(logger.Options, DmEventId.MissingSchemaWarning, LogLevel.Warning, "DmEventId.MissingSchemaWarning", (Func<LogLevel, Action<ILogger, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.MissingSchemaWarning, _resourceManager.GetString("LogMissingSchema")))));
 			}
-			return (EventDefinition<string>)eventDefinitionBase;
+			return (EventDefinition<string>)(object)val;
 		}
 
-		public static EventDefinition<string> LogMissingTable([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string> LogMissingTable([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogMissingTable;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogMissingTable;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogMissingTable, () => new EventDefinition<string>(logger.Options, DmEventId.MissingTableWarning, LogLevel.Warning, "DmEventId.MissingTableWarning", (LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.MissingTableWarning, _resourceManager.GetString("LogMissingTable"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogMissingTable, () => (EventDefinitionBase)(object)new EventDefinition<string>(logger.Options, DmEventId.MissingTableWarning, LogLevel.Warning, "DmEventId.MissingTableWarning", (Func<LogLevel, Action<ILogger, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string>(level, DmEventId.MissingTableWarning, _resourceManager.GetString("LogMissingTable")))));
 			}
-			return (EventDefinition<string>)eventDefinitionBase;
+			return (EventDefinition<string>)(object)val;
 		}
 
-		public static EventDefinition<string, string, string, string> LogPrincipalColumnNotFound([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string, string, string> LogPrincipalColumnNotFound([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogPrincipalColumnNotFound;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogPrincipalColumnNotFound;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogPrincipalColumnNotFound, () => new EventDefinition<string, string, string, string>(logger.Options, DmEventId.ForeignKeyPrincipalColumnMissingWarning, LogLevel.Warning, "DmEventId.ForeignKeyPrincipalColumnMissingWarning", (LogLevel level) => LoggerMessage.Define<string, string, string, string>(level, DmEventId.ForeignKeyPrincipalColumnMissingWarning, _resourceManager.GetString("LogPrincipalColumnNotFound"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogPrincipalColumnNotFound, () => (EventDefinitionBase)(object)new EventDefinition<string, string, string, string>(logger.Options, DmEventId.ForeignKeyPrincipalColumnMissingWarning, LogLevel.Warning, "DmEventId.ForeignKeyPrincipalColumnMissingWarning", (Func<LogLevel, Action<ILogger, string, string, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string, string, string>(level, DmEventId.ForeignKeyPrincipalColumnMissingWarning, _resourceManager.GetString("LogPrincipalColumnNotFound")))));
 			}
-			return (EventDefinition<string, string, string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string, string, string>)(object)val;
 		}
 
-		public static EventDefinition<string, string, string> LogPrincipalTableNotInSelectionSet([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static EventDefinition<string, string, string> LogPrincipalTableNotInSelectionSet([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogPrincipalTableNotInSelectionSet;
-			if (eventDefinitionBase == null)
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogPrincipalTableNotInSelectionSet;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogPrincipalTableNotInSelectionSet, () => new EventDefinition<string, string, string>(logger.Options, DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning, LogLevel.Warning, "DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning", (LogLevel level) => LoggerMessage.Define<string, string, string>(level, DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning, _resourceManager.GetString("LogPrincipalTableNotInSelectionSet"))));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogPrincipalTableNotInSelectionSet, () => (EventDefinitionBase)(object)new EventDefinition<string, string, string>(logger.Options, DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning, LogLevel.Warning, "DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning", (Func<LogLevel, Action<ILogger, string, string, string, Exception>>)((LogLevel level) => LoggerMessage.Define<string, string, string>(level, DmEventId.ForeignKeyReferencesMissingPrincipalTableWarning, _resourceManager.GetString("LogPrincipalTableNotInSelectionSet")))));
 			}
-			return (EventDefinition<string, string, string>)eventDefinitionBase;
+			return (EventDefinition<string, string, string>)(object)val;
 		}
 
-		public static FallbackEventDefinition LogFoundSequence([JetBrains.Annotations.NotNull] IDiagnosticsLogger logger)
+		public static FallbackEventDefinition LogFoundSequence([NotNull] IDiagnosticsLogger logger)
 		{
-			EventDefinitionBase eventDefinitionBase = ((DmLoggingDefinitions)logger.Definitions).LogFoundSequence;
-			if (eventDefinitionBase == null)
+			//IL_0056: Unknown result type (might be due to invalid IL or missing references)
+			//IL_005c: Expected O, but got Unknown
+			EventDefinitionBase val = ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundSequence;
+			if (val == null)
 			{
-				eventDefinitionBase = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)logger.Definitions).LogFoundSequence, () => new FallbackEventDefinition(logger.Options, DmEventId.SequenceFound, LogLevel.Debug, "DmEventId.SequenceFound", _resourceManager.GetString("LogFoundSequence")));
+				val = LazyInitializer.EnsureInitialized(ref ((DmLoggingDefinitions)(object)logger.Definitions).LogFoundSequence, () => (EventDefinitionBase)new FallbackEventDefinition(logger.Options, DmEventId.SequenceFound, LogLevel.Debug, "DmEventId.SequenceFound", _resourceManager.GetString("LogFoundSequence")));
 			}
-			return (FallbackEventDefinition)eventDefinitionBase;
+			return (FallbackEventDefinition)val;
 		}
 	}
 }

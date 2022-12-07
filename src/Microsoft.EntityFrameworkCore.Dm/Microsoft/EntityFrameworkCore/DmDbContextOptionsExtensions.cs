@@ -10,36 +10,36 @@ namespace Microsoft.EntityFrameworkCore
 {
 	public static class DmDbContextOptionsExtensions
 	{
-		public static DbContextOptionsBuilder UseDm([JetBrains.Annotations.NotNull] this DbContextOptionsBuilder optionsBuilder, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null)
+		public static DbContextOptionsBuilder UseDm([NotNull] this DbContextOptionsBuilder optionsBuilder, [NotNull] string connectionString, [CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(optionsBuilder, "optionsBuilder");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(connectionString, "connectionString");
-			DmOptionsExtension extension = (DmOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnectionString(connectionString);
-			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
+			Check.NotNull<DbContextOptionsBuilder>(optionsBuilder, "optionsBuilder");
+			Check.NotEmpty(connectionString, "connectionString");
+			DmOptionsExtension dmOptionsExtension = (DmOptionsExtension)(object)((RelationalOptionsExtension)GetOrCreateExtension(optionsBuilder)).WithConnectionString(connectionString);
+			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension<DmOptionsExtension>(dmOptionsExtension);
 			ConfigureWarnings(optionsBuilder);
 			dmOptionsAction?.Invoke(new DmDbContextOptionsBuilder(optionsBuilder));
 			return optionsBuilder;
 		}
 
-		public static DbContextOptionsBuilder UseDm([JetBrains.Annotations.NotNull] this DbContextOptionsBuilder optionsBuilder, [JetBrains.Annotations.NotNull] DbConnection connection, [JetBrains.Annotations.CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null)
+		public static DbContextOptionsBuilder UseDm([NotNull] this DbContextOptionsBuilder optionsBuilder, [NotNull] DbConnection connection, [CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(optionsBuilder, "optionsBuilder");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(connection, "connection");
-			DmOptionsExtension extension = (DmOptionsExtension)GetOrCreateExtension(optionsBuilder).WithConnection(connection);
-			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(extension);
+			Check.NotNull<DbContextOptionsBuilder>(optionsBuilder, "optionsBuilder");
+			Check.NotNull(connection, "connection");
+			DmOptionsExtension dmOptionsExtension = (DmOptionsExtension)(object)((RelationalOptionsExtension)GetOrCreateExtension(optionsBuilder)).WithConnection(connection);
+			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension<DmOptionsExtension>(dmOptionsExtension);
 			ConfigureWarnings(optionsBuilder);
 			dmOptionsAction?.Invoke(new DmDbContextOptionsBuilder(optionsBuilder));
 			return optionsBuilder;
 		}
 
-		public static DbContextOptionsBuilder<TContext> UseDm<TContext>([JetBrains.Annotations.NotNull] this DbContextOptionsBuilder<TContext> optionsBuilder, [JetBrains.Annotations.NotNull] string connectionString, [JetBrains.Annotations.CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null) where TContext : DbContext
+		public static DbContextOptionsBuilder<TContext> UseDm<TContext>([NotNull] this DbContextOptionsBuilder<TContext> optionsBuilder, [NotNull] string connectionString, [CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null) where TContext : DbContext
 		{
-			return (DbContextOptionsBuilder<TContext>)((DbContextOptionsBuilder)optionsBuilder).UseDm(connectionString, dmOptionsAction);
+			return (DbContextOptionsBuilder<TContext>)(object)((DbContextOptionsBuilder)(object)optionsBuilder).UseDm(connectionString, dmOptionsAction);
 		}
 
-		public static DbContextOptionsBuilder<TContext> UseDm<TContext>([JetBrains.Annotations.NotNull] this DbContextOptionsBuilder<TContext> optionsBuilder, [JetBrains.Annotations.NotNull] DbConnection connection, [JetBrains.Annotations.CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null) where TContext : DbContext
+		public static DbContextOptionsBuilder<TContext> UseDm<TContext>([NotNull] this DbContextOptionsBuilder<TContext> optionsBuilder, [NotNull] DbConnection connection, [CanBeNull] Action<DmDbContextOptionsBuilder> dmOptionsAction = null) where TContext : DbContext
 		{
-			return (DbContextOptionsBuilder<TContext>)((DbContextOptionsBuilder)optionsBuilder).UseDm(connection, dmOptionsAction);
+			return (DbContextOptionsBuilder<TContext>)(object)((DbContextOptionsBuilder)(object)optionsBuilder).UseDm(connection, dmOptionsAction);
 		}
 
 		private static DmOptionsExtension GetOrCreateExtension(DbContextOptionsBuilder optionsBuilder)
@@ -49,9 +49,10 @@ namespace Microsoft.EntityFrameworkCore
 
 		private static void ConfigureWarnings(DbContextOptionsBuilder optionsBuilder)
 		{
-			CoreOptionsExtension coreOptionsExtension = optionsBuilder.Options.FindExtension<CoreOptionsExtension>() ?? new CoreOptionsExtension();
-			coreOptionsExtension = coreOptionsExtension.WithWarningsConfiguration(coreOptionsExtension.WarningsConfiguration.TryWithExplicit(RelationalEventId.AmbientTransactionWarning, WarningBehavior.Throw));
-			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension(coreOptionsExtension);
+			//IL_0010: Unknown result type (might be due to invalid IL or missing references)
+			CoreOptionsExtension val = (CoreOptionsExtension)(((object)optionsBuilder.Options.FindExtension<CoreOptionsExtension>()) ?? ((object)new CoreOptionsExtension()));
+			val = val.WithWarningsConfiguration(val.WarningsConfiguration.TryWithExplicit(RelationalEventId.AmbientTransactionWarning, (WarningBehavior)2));
+			((IDbContextOptionsBuilderInfrastructure)optionsBuilder).AddOrUpdateExtension<CoreOptionsExtension>(val);
 		}
 	}
 }

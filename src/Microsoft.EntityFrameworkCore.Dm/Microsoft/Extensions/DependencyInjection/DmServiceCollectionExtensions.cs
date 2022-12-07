@@ -25,20 +25,21 @@ namespace Microsoft.Extensions.DependencyInjection
 {
 	public static class DmServiceCollectionExtensions
 	{
-		public static IServiceCollection AddEntityFrameworkDm([JetBrains.Annotations.NotNull] this IServiceCollection serviceCollection)
+		public static IServiceCollection AddEntityFrameworkDm([NotNull] this IServiceCollection serviceCollection)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(serviceCollection, "serviceCollection");
-			EntityFrameworkServicesBuilder entityFrameworkServicesBuilder = new EntityFrameworkRelationalServicesBuilder(serviceCollection).TryAdd<LoggingDefinitions, DmLoggingDefinitions>().TryAdd<IDatabaseProvider, DatabaseProvider<DmOptionsExtension>>().TryAdd<IRelationalAnnotationProvider, DmAnnotationProvider>()
-				.TryAdd((Func<IServiceProvider, IValueGeneratorCache>)((IServiceProvider p) => ServiceProviderServiceExtensions.GetService<IDmValueGeneratorCache>(p)))
+			//IL_000e: Unknown result type (might be due to invalid IL or missing references)
+			Check.NotNull(serviceCollection, "serviceCollection");
+			EntityFrameworkServicesBuilder val = ((EntityFrameworkServicesBuilder)new EntityFrameworkRelationalServicesBuilder(serviceCollection)).TryAdd<LoggingDefinitions, DmLoggingDefinitions>().TryAdd<IDatabaseProvider, DatabaseProvider<DmOptionsExtension>>().TryAdd<IRelationalAnnotationProvider, DmAnnotationProvider>()
+				.TryAdd<IValueGeneratorCache>((Func<IServiceProvider, IValueGeneratorCache>)((IServiceProvider p) => (IValueGeneratorCache)p.GetService<IDmValueGeneratorCache>()))
 				.TryAdd<IRelationalTypeMappingSource, DmTypeMappingSource>()
 				.TryAdd<ISqlGenerationHelper, DmSqlGenerationHelper>()
 				.TryAdd<IMigrationsAnnotationProvider, DmMigrationsAnnotationProvider>()
 				.TryAdd<IModelValidator, DmModelValidator>()
 				.TryAdd<IProviderConventionSetBuilder, DmConventionSetBuilder>()
-				.TryAdd((Func<IServiceProvider, IUpdateSqlGenerator>)((IServiceProvider p) => ServiceProviderServiceExtensions.GetService<IDmUpdateSqlGenerator>(p)))
+				.TryAdd<IUpdateSqlGenerator>((Func<IServiceProvider, IUpdateSqlGenerator>)((IServiceProvider p) => (IUpdateSqlGenerator)p.GetService<IDmUpdateSqlGenerator>()))
 				.TryAdd<IModificationCommandBatchFactory, DmModificationCommandBatchFactory>()
 				.TryAdd<IValueGeneratorSelector, DmValueGeneratorSelector>()
-				.TryAdd((Func<IServiceProvider, IRelationalConnection>)((IServiceProvider p) => ServiceProviderServiceExtensions.GetService<IDmRelationalConnection>(p)))
+				.TryAdd<IRelationalConnection>((Func<IServiceProvider, IRelationalConnection>)((IServiceProvider p) => (IRelationalConnection)p.GetService<IDmRelationalConnection>()))
 				.TryAdd<IRelationalTransactionFactory, DmTransactionFactory>()
 				.TryAdd<IMigrationsSqlGenerator, DmMigrationsSqlGenerator>()
 				.TryAdd<IRelationalDatabaseCreator, DmDatabaseCreator>()
@@ -51,12 +52,12 @@ namespace Microsoft.Extensions.DependencyInjection
 				.TryAdd<IQueryTranslationPostprocessorFactory, DmQueryTranslationPostprocessorFactory>()
 				.TryAdd<IRelationalSqlTranslatingExpressionVisitorFactory, DmSqlTranslatingExpressionVisitorFactory>()
 				.TryAdd<IRelationalParameterBasedSqlProcessorFactory, DmRelationalParameterBasedSqlProcessorFactory>()
-				.TryAddProviderSpecificServices(delegate(ServiceCollectionMap b)
+				.TryAddProviderSpecificServices((Action<ServiceCollectionMap>)delegate(ServiceCollectionMap b)
 				{
 					b.TryAddSingleton<IDmValueGeneratorCache, DmValueGeneratorCache>().TryAddSingleton<IDmUpdateSqlGenerator, DmUpdateSqlGenerator>().TryAddSingleton<IDmSequenceValueGeneratorFactory, DmSequenceValueGeneratorFactory>()
 						.TryAddScoped<IDmRelationalConnection, DmRelationalConnection>();
 				});
-			entityFrameworkServicesBuilder.TryAddCoreServices();
+			val.TryAddCoreServices();
 			return serviceCollection;
 		}
 	}

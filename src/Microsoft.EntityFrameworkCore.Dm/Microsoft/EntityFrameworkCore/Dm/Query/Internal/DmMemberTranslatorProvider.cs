@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Query;
 
@@ -5,11 +6,11 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 {
 	public class DmMemberTranslatorProvider : RelationalMemberTranslatorProvider
 	{
-		public DmMemberTranslatorProvider([JetBrains.Annotations.NotNull] RelationalMemberTranslatorProviderDependencies dependencies)
+		public DmMemberTranslatorProvider([NotNull] RelationalMemberTranslatorProviderDependencies dependencies)
 			: base(dependencies)
 		{
 			ISqlExpressionFactory sqlExpressionFactory = dependencies.SqlExpressionFactory;
-			AddTranslators(new IMemberTranslator[2]
+			base.AddTranslators((IEnumerable<IMemberTranslator>)(object)new IMemberTranslator[2]
 			{
 				new DmDateTimeMemberTranslator(sqlExpressionFactory),
 				new DmStringMemberTranslator(sqlExpressionFactory)

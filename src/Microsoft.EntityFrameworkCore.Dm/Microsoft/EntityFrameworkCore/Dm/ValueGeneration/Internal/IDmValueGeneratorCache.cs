@@ -6,6 +6,6 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 {
 	public interface IDmValueGeneratorCache : IValueGeneratorCache
 	{
-		DmSequenceValueGeneratorState GetOrAddSequenceState([JetBrains.Annotations.NotNull] IProperty property);
+		DmSequenceValueGeneratorState GetOrAddSequenceState([NotNull] IProperty property);
 	}
 }

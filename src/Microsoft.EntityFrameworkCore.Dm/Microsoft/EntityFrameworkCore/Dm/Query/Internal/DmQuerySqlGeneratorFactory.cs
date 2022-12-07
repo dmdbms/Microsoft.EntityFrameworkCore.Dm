@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual QuerySqlGenerator Create()
 		{
-			return new DmQuerySqlGenerator(_dependencies);
+			return (QuerySqlGenerator)(object)new DmQuerySqlGenerator(_dependencies);
 		}
 	}
 }

@@ -1,4 +1,5 @@
 using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
@@ -14,11 +15,15 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		private bool HasStringChild(SqlBinaryExpression binaryExpression)
 		{
-			if (binaryExpression.Left != null && binaryExpression.Left.Type == typeof(string))
+			//IL_0085: Unknown result type (might be due to invalid IL or missing references)
+			//IL_008f: Expected O, but got Unknown
+			//IL_00b9: Unknown result type (might be due to invalid IL or missing references)
+			//IL_00c3: Expected O, but got Unknown
+			if (binaryExpression.Left != null && ((Expression)(object)binaryExpression.Left).Type == typeof(string))
 			{
 				return true;
 			}
-			if (binaryExpression.Right != null && binaryExpression.Right.Type == typeof(string))
+			if (binaryExpression.Right != null && ((Expression)(object)binaryExpression.Right).Type == typeof(string))
 			{
 				return true;
 			}
@@ -35,9 +40,13 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		protected override string GenerateOperator(SqlBinaryExpression binaryExpression)
 		{
+			//IL_006c: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0076: Expected O, but got Unknown
+			//IL_009a: Unknown result type (might be due to invalid IL or missing references)
+			//IL_00a4: Expected O, but got Unknown
 			if (binaryExpression.OperatorType == ExpressionType.Add)
 			{
-				if (binaryExpression.Left.Type == typeof(string) || binaryExpression.Right.Type == typeof(string))
+				if (((Expression)(object)binaryExpression.Left).Type == typeof(string) || ((Expression)(object)binaryExpression.Right).Type == typeof(string))
 				{
 					return "||";
 				}
@@ -57,9 +66,9 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 		{
 			if (selectExpression.Limit != null && selectExpression.Offset == null)
 			{
-				Sql.Append("TOP(");
-				Visit(selectExpression.Limit);
-				Sql.Append(") ");
+				base.Sql.Append("TOP(");
+				((ExpressionVisitor)(object)this).Visit((Expression?)(object)selectExpression.Limit);
+				base.Sql.Append(") ");
 			}
 		}
 
@@ -67,55 +76,57 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 		{
 			if (selectExpression.Offset != null)
 			{
-				Sql.AppendLine().Append("OFFSET ");
-				Visit(selectExpression.Offset);
-				Sql.Append(" ROWS");
+				base.Sql.AppendLine().Append("OFFSET ");
+				((ExpressionVisitor)(object)this).Visit((Expression?)(object)selectExpression.Offset);
+				base.Sql.Append(" ROWS");
 				if (selectExpression.Limit != null)
 				{
-					Sql.Append(" FETCH NEXT ");
-					Visit(selectExpression.Limit);
-					Sql.Append(" ROWS ONLY");
+					base.Sql.Append(" FETCH NEXT ");
+					((ExpressionVisitor)(object)this).Visit((Expression?)(object)selectExpression.Limit);
+					base.Sql.Append(" ROWS ONLY");
 				}
 			}
 		}
 
 		protected override Expression VisitSqlFunction(SqlFunctionExpression sqlFunctionExpression)
 		{
+			//IL_01b4: Unknown result type (might be due to invalid IL or missing references)
+			//IL_01bb: Expected O, but got Unknown
 			if (sqlFunctionExpression.Name.StartsWith("@@", StringComparison.Ordinal))
 			{
-				Sql.Append(sqlFunctionExpression.Name);
-				return sqlFunctionExpression;
+				base.Sql.Append(sqlFunctionExpression.Name);
+				return (Expression)(object)sqlFunctionExpression;
 			}
 			if (sqlFunctionExpression.Name == "COUNT")
 			{
-				if (sqlFunctionExpression.Type == typeof(int))
+				if (((Expression)(object)sqlFunctionExpression).Type == typeof(int))
 				{
-					Sql.Append(" CAST(");
+					base.Sql.Append(" CAST(");
 					base.VisitSqlFunction(sqlFunctionExpression);
-					Sql.Append(" AS INT) ");
-					return sqlFunctionExpression;
+					base.Sql.Append(" AS INT) ");
+					return (Expression)(object)sqlFunctionExpression;
 				}
 			}
 			else if (sqlFunctionExpression.Name == "SUM")
 			{
-				if (sqlFunctionExpression.Type == typeof(int))
+				if (((Expression)(object)sqlFunctionExpression).Type == typeof(int))
 				{
-					Sql.Append(" CAST(");
+					base.Sql.Append(" CAST(");
 					base.VisitSqlFunction(sqlFunctionExpression);
-					Sql.Append(" AS INT) ");
-					return sqlFunctionExpression;
+					base.Sql.Append(" AS INT) ");
+					return (Expression)(object)sqlFunctionExpression;
 				}
 			}
-			else if ((sqlFunctionExpression.Name == "TRUNCATE" || sqlFunctionExpression.Name == "ROUND") && sqlFunctionExpression.Type == typeof(double))
+			else if ((sqlFunctionExpression.Name == "TRUNCATE" || sqlFunctionExpression.Name == "ROUND") && ((Expression)(object)sqlFunctionExpression).Type == typeof(double))
 			{
-				Sql.Append(" CAST(");
+				base.Sql.Append(" CAST(");
 				base.VisitSqlFunction(sqlFunctionExpression);
-				Sql.Append(" AS DOUBLE)");
-				return sqlFunctionExpression;
+				base.Sql.Append(" AS DOUBLE)");
+				return (Expression)(object)sqlFunctionExpression;
 			}
 			if (!sqlFunctionExpression.IsBuiltIn && string.IsNullOrEmpty(sqlFunctionExpression.Schema))
 			{
-				sqlFunctionExpression = new SqlFunctionExpression("SYSDBA", sqlFunctionExpression.Name, sqlFunctionExpression.Arguments, sqlFunctionExpression.IsNullable, sqlFunctionExpression.ArgumentsPropagateNullability, sqlFunctionExpression.Type, sqlFunctionExpression.TypeMapping);
+				sqlFunctionExpression = new SqlFunctionExpression("SYSDBA", sqlFunctionExpression.Name, (IEnumerable<SqlExpression>)sqlFunctionExpression.Arguments, sqlFunctionExpression.IsNullable, (IEnumerable<bool>)sqlFunctionExpression.ArgumentsPropagateNullability, ((Expression)(object)sqlFunctionExpression).Type, ((SqlExpression)sqlFunctionExpression).TypeMapping);
 			}
 			return base.VisitSqlFunction(sqlFunctionExpression);
 		}

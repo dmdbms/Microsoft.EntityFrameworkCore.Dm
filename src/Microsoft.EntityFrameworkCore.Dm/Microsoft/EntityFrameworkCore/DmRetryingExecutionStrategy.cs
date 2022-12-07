@@ -1,5 +1,6 @@
 using System;
 using System.Collections.Generic;
+using System.Runtime.InteropServices;
 using Dm;
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Dm.Storage.Internal;
@@ -11,33 +12,33 @@ namespace Microsoft.EntityFrameworkCore
 	{
 		private readonly ICollection<int> _additionalErrorNumbers;
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] DbContext context)
+		public DmRetryingExecutionStrategy([NotNull] DbContext context)
 			: this(context, ExecutionStrategy.DefaultMaxRetryCount)
 		{
 		}
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] ExecutionStrategyDependencies dependencies)
+		public DmRetryingExecutionStrategy([NotNull] ExecutionStrategyDependencies dependencies)
 			: this(dependencies, ExecutionStrategy.DefaultMaxRetryCount)
 		{
 		}
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] DbContext context, int maxRetryCount)
+		public DmRetryingExecutionStrategy([NotNull] DbContext context, int maxRetryCount)
 			: this(context, maxRetryCount, ExecutionStrategy.DefaultMaxDelay, null)
 		{
 		}
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] ExecutionStrategyDependencies dependencies, int maxRetryCount)
+		public DmRetryingExecutionStrategy([NotNull] ExecutionStrategyDependencies dependencies, int maxRetryCount)
 			: this(dependencies, maxRetryCount, ExecutionStrategy.DefaultMaxDelay, null)
 		{
 		}
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] DbContext context, int maxRetryCount, TimeSpan maxRetryDelay, [JetBrains.Annotations.CanBeNull] ICollection<int> errorNumbersToAdd)
+		public DmRetryingExecutionStrategy([NotNull] DbContext context, int maxRetryCount, TimeSpan maxRetryDelay, [CanBeNull] ICollection<int> errorNumbersToAdd)
 			: base(context, maxRetryCount, maxRetryDelay)
 		{
 			_additionalErrorNumbers = errorNumbersToAdd;
 		}
 
-		public DmRetryingExecutionStrategy([JetBrains.Annotations.NotNull] ExecutionStrategyDependencies dependencies, int maxRetryCount, TimeSpan maxRetryDelay, [JetBrains.Annotations.CanBeNull] ICollection<int> errorNumbersToAdd)
+		public DmRetryingExecutionStrategy([NotNull] ExecutionStrategyDependencies dependencies, int maxRetryCount, TimeSpan maxRetryDelay, [CanBeNull] ICollection<int> errorNumbersToAdd)
 			: base(dependencies, maxRetryCount, maxRetryDelay)
 		{
 			_additionalErrorNumbers = errorNumbersToAdd;
@@ -47,8 +48,8 @@ namespace Microsoft.EntityFrameworkCore
 		{
 			if (_additionalErrorNumbers != null)
 			{
-				DmException ex = exception as DmException;
-				if (ex != null && _additionalErrorNumbers.Contains(ex.ErrorCode))
+				DmException val = (DmException)(object)((exception is DmException) ? exception : null);
+				if (val != null && _additionalErrorNumbers.Contains(((ExternalException)(object)val).ErrorCode))
 				{
 					return true;
 				}
@@ -63,7 +64,7 @@ namespace Microsoft.EntityFrameworkCore
 			{
 				return null;
 			}
-			if (ExecutionStrategy.CallOnWrappedException(lastException, IsMemoryOptimizedError))
+			if (ExecutionStrategy.CallOnWrappedException<bool>(lastException, (Func<Exception, bool>)IsMemoryOptimizedError))
 			{
 				return TimeSpan.FromMilliseconds(nextDelay.Value.TotalSeconds);
 			}

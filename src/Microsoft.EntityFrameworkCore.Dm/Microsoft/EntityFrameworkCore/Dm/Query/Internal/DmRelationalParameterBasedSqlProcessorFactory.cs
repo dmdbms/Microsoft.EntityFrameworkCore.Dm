@@ -13,7 +13,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual RelationalParameterBasedSqlProcessor Create(bool useRelationalNulls)
 		{
-			return new DmRelationalParameterBasedSqlProcessor(_dependencies, useRelationalNulls);
+			return (RelationalParameterBasedSqlProcessor)(object)new DmRelationalParameterBasedSqlProcessor(_dependencies, useRelationalNulls);
 		}
 	}
 }

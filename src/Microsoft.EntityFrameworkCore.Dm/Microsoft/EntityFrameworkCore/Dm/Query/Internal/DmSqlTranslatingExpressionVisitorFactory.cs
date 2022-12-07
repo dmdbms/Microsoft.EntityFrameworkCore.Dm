@@ -7,14 +7,14 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 	{
 		private readonly RelationalSqlTranslatingExpressionVisitorDependencies _dependencies;
 
-		public DmSqlTranslatingExpressionVisitorFactory([JetBrains.Annotations.NotNull] RelationalSqlTranslatingExpressionVisitorDependencies dependencies)
+		public DmSqlTranslatingExpressionVisitorFactory([NotNull] RelationalSqlTranslatingExpressionVisitorDependencies dependencies)
 		{
 			_dependencies = dependencies;
 		}
 
 		public virtual RelationalSqlTranslatingExpressionVisitor Create(QueryCompilationContext queryCompilationContext, QueryableMethodTranslatingExpressionVisitor queryableMethodTranslatingExpressionVisitor)
 		{
-			return new DmSqlTranslatingExpressionVisitor(_dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor);
+			return (RelationalSqlTranslatingExpressionVisitor)(object)new DmSqlTranslatingExpressionVisitor(_dependencies, queryCompilationContext, queryableMethodTranslatingExpressionVisitor);
 		}
 	}
 }

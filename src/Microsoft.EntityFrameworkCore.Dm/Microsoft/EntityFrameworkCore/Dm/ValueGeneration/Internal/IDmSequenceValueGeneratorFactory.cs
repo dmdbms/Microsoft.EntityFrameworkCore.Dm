@@ -9,6 +9,6 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 {
 	public interface IDmSequenceValueGeneratorFactory
 	{
-		ValueGenerator Create([JetBrains.Annotations.NotNull] IProperty property, [JetBrains.Annotations.NotNull] DmSequenceValueGeneratorState generatorState, [JetBrains.Annotations.NotNull] IDmRelationalConnection connection, [JetBrains.Annotations.NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [JetBrains.Annotations.NotNull] IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger);
+		ValueGenerator Create([NotNull] IProperty property, [NotNull] DmSequenceValueGeneratorState generatorState, [NotNull] IDmRelationalConnection connection, [NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [NotNull] IRelationalCommandDiagnosticsLogger commandLogger);
 	}
 }

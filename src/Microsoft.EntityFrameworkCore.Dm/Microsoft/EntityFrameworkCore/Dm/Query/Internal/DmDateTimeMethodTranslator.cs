@@ -1,9 +1,11 @@
 using System;
 using System.Collections.Generic;
+using System.Linq.Expressions;
 using System.Reflection;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Query;
 using Microsoft.EntityFrameworkCore.Query.SqlExpressions;
+using Microsoft.EntityFrameworkCore.Storage;
 
 namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 {
@@ -83,19 +85,20 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 			{
 				if (!value.Equals("year") && !value.Equals("month"))
 				{
-					SqlConstantExpression sqlConstantExpression = arguments[0] as SqlConstantExpression;
-					if (sqlConstantExpression != null && ((double)sqlConstantExpression.Value >= 2147483647.0 || (double)sqlConstantExpression.Value <= -2147483648.0))
+					SqlExpression obj = arguments[0];
+					SqlConstantExpression val = (SqlConstantExpression)(object)((obj is SqlConstantExpression) ? obj : null);
+					if (val != null && ((double)val.Value >= 2147483647.0 || (double)val.Value <= -2147483648.0))
 					{
 						result = null;
 						goto IL_00d4;
 					}
 				}
-				result = _sqlExpressionFactory.Function("DATEADD", new SqlExpression[3]
+				result = _sqlExpressionFactory.Function("DATEADD", (IEnumerable<SqlExpression>)(object)new SqlExpression[3]
 				{
-					_sqlExpressionFactory.Fragment(value),
-					_sqlExpressionFactory.Convert(arguments[0], typeof(int)),
+					(SqlExpression)_sqlExpressionFactory.Fragment(value),
+					(SqlExpression)_sqlExpressionFactory.Convert(arguments[0], typeof(int), (RelationalTypeMapping)null),
 					instance
-				}, nullable: true, new bool[3] { false, true, true }, instance.Type, instance.TypeMapping);
+				}, true, (IEnumerable<bool>)new bool[3] { false, true, true }, ((Expression)(object)instance).Type, instance.TypeMapping);
 				goto IL_00d4;
 			}
 			return null;

@@ -17,12 +17,12 @@ namespace System.Reflection
 			return !propertyInfo.IsStatic() && propertyInfo.CanRead && (!needsWrite || propertyInfo.FindSetterProperty() != null) && propertyInfo.GetMethod != null && (!publicOnly || propertyInfo.GetMethod!.IsPublic) && propertyInfo.GetIndexParameters().Length == 0;
 		}
 
-		public static PropertyInfo FindGetterProperty([JetBrains.Annotations.NotNull] this PropertyInfo propertyInfo)
+		public static PropertyInfo FindGetterProperty([NotNull] this PropertyInfo propertyInfo)
 		{
 			return propertyInfo.DeclaringType.GetPropertiesInHierarchy(propertyInfo.Name).FirstOrDefault((PropertyInfo p) => p.GetMethod != null);
 		}
 
-		public static PropertyInfo FindSetterProperty([JetBrains.Annotations.NotNull] this PropertyInfo propertyInfo)
+		public static PropertyInfo FindSetterProperty([NotNull] this PropertyInfo propertyInfo)
 		{
 			return propertyInfo.DeclaringType.GetPropertiesInHierarchy(propertyInfo.Name).FirstOrDefault((PropertyInfo p) => p.SetMethod != null);
 		}

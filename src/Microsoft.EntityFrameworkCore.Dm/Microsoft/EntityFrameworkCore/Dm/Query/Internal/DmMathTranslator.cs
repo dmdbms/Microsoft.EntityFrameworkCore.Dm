@@ -184,30 +184,34 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 		{
 			if (_supportedMethodTranslations.TryGetValue(method, out var value))
 			{
-				RelationalTypeMapping relationalTypeMapping = ((arguments.Count == 1) ? ExpressionExtensions.InferTypeMapping(arguments[0]) : ExpressionExtensions.InferTypeMapping(arguments[0], arguments[1]));
-				SqlExpression[] array = new SqlExpression[arguments.Count];
-				array[0] = _sqlExpressionFactory.ApplyTypeMapping(arguments[0], relationalTypeMapping);
+				RelationalTypeMapping val = ((arguments.Count == 1) ? ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[1] { arguments[0] }) : ExpressionExtensions.InferTypeMapping((SqlExpression[])(object)new SqlExpression[2]
+				{
+					arguments[0],
+					arguments[1]
+				}));
+				SqlExpression[] array = (SqlExpression[])(object)new SqlExpression[arguments.Count];
+				array[0] = _sqlExpressionFactory.ApplyTypeMapping(arguments[0], val);
 				if (arguments.Count == 2)
 				{
-					array[1] = _sqlExpressionFactory.ApplyTypeMapping(arguments[1], relationalTypeMapping);
+					array[1] = _sqlExpressionFactory.ApplyTypeMapping(arguments[1], val);
 				}
-				return _sqlExpressionFactory.Function(value, array, nullable: true, array.Select((SqlExpression a) => true).ToArray(), method.ReturnType, (value == "SIGN") ? null : relationalTypeMapping);
+				return (SqlExpression)(object)_sqlExpressionFactory.Function(value, (IEnumerable<SqlExpression>)array, true, (IEnumerable<bool>)array.Select((SqlExpression a) => true).ToArray(), method.ReturnType, (value == "SIGN") ? null : val);
 			}
 			if (_truncateMethodInfos.Contains(method))
 			{
-				SqlExpression sqlExpression = arguments[0];
-				return _sqlExpressionFactory.Function("TRUNCATE", new SqlExpression[3]
+				SqlExpression val2 = arguments[0];
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("TRUNCATE", (IEnumerable<SqlExpression>)(object)new SqlExpression[3]
 				{
-					sqlExpression,
-					_sqlExpressionFactory.Constant(0),
-					_sqlExpressionFactory.Constant(1)
-				}, nullable: true, new bool[3] { true, false, false }, method.ReturnType, sqlExpression.TypeMapping);
+					val2,
+					(SqlExpression)_sqlExpressionFactory.Constant((object)0, (RelationalTypeMapping)null),
+					(SqlExpression)_sqlExpressionFactory.Constant((object)1, (RelationalTypeMapping)null)
+				}, true, (IEnumerable<bool>)new bool[3] { true, false, false }, method.ReturnType, val2.TypeMapping);
 			}
 			if (_roundMethodInfos.Contains(method))
 			{
-				SqlExpression sqlExpression2 = arguments[0];
-				SqlExpression sqlExpression3 = ((arguments.Count == 2) ? arguments[1] : _sqlExpressionFactory.Constant(0));
-				return _sqlExpressionFactory.Function("ROUND", new SqlExpression[2] { sqlExpression2, sqlExpression3 }, nullable: true, new bool[2] { true, true }, method.ReturnType, sqlExpression2.TypeMapping);
+				SqlExpression val3 = arguments[0];
+				SqlExpression val4 = (SqlExpression)((arguments.Count == 2) ? ((object)arguments[1]) : ((object)_sqlExpressionFactory.Constant((object)0, (RelationalTypeMapping)null)));
+				return (SqlExpression)(object)_sqlExpressionFactory.Function("ROUND", (IEnumerable<SqlExpression>)(object)new SqlExpression[2] { val3, val4 }, true, (IEnumerable<bool>)new bool[2] { true, true }, method.ReturnType, val3.TypeMapping);
 			}
 			return null;
 		}

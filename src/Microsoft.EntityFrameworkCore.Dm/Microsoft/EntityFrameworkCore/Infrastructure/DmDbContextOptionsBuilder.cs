@@ -8,24 +8,25 @@ namespace Microsoft.EntityFrameworkCore.Infrastructure
 {
 	public class DmDbContextOptionsBuilder : RelationalDbContextOptionsBuilder<DmDbContextOptionsBuilder, DmOptionsExtension>
 	{
-		public DmDbContextOptionsBuilder([JetBrains.Annotations.NotNull] DbContextOptionsBuilder optionsBuilder)
+		public DmDbContextOptionsBuilder([NotNull] DbContextOptionsBuilder optionsBuilder)
 			: base(optionsBuilder)
 		{
 		}
 
 		public virtual DmDbContextOptionsBuilder EnableRetryOnFailure()
 		{
-			return ExecutionStrategy((ExecutionStrategyDependencies c) => new DmRetryingExecutionStrategy(c));
+			return ((RelationalDbContextOptionsBuilder<DmDbContextOptionsBuilder, DmOptionsExtension>)this).ExecutionStrategy((Func<ExecutionStrategyDependencies, IExecutionStrategy>)((ExecutionStrategyDependencies c) => (IExecutionStrategy)(object)new DmRetryingExecutionStrategy(c)));
 		}
 
 		public virtual DmDbContextOptionsBuilder EnableRetryOnFailure(int maxRetryCount)
 		{
-			return ExecutionStrategy((ExecutionStrategyDependencies c) => new DmRetryingExecutionStrategy(c, maxRetryCount));
+			return ((RelationalDbContextOptionsBuilder<DmDbContextOptionsBuilder, DmOptionsExtension>)this).ExecutionStrategy((Func<ExecutionStrategyDependencies, IExecutionStrategy>)((ExecutionStrategyDependencies c) => (IExecutionStrategy)(object)new DmRetryingExecutionStrategy(c, maxRetryCount)));
 		}
 
-		public virtual DmDbContextOptionsBuilder EnableRetryOnFailure(int maxRetryCount, TimeSpan maxRetryDelay, [JetBrains.Annotations.NotNull] ICollection<int> errorNumbersToAdd)
+		public virtual DmDbContextOptionsBuilder EnableRetryOnFailure(int maxRetryCount, TimeSpan maxRetryDelay, [NotNull] ICollection<int> errorNumbersToAdd)
 		{
-			return ExecutionStrategy((ExecutionStrategyDependencies c) => new DmRetryingExecutionStrategy(c, maxRetryCount, maxRetryDelay, errorNumbersToAdd));
+			ICollection<int> errorNumbersToAdd2 = errorNumbersToAdd;
+			return ((RelationalDbContextOptionsBuilder<DmDbContextOptionsBuilder, DmOptionsExtension>)this).ExecutionStrategy((Func<ExecutionStrategyDependencies, IExecutionStrategy>)((ExecutionStrategyDependencies c) => (IExecutionStrategy)(object)new DmRetryingExecutionStrategy(c, maxRetryCount, maxRetryDelay, errorNumbersToAdd2)));
 		}
 	}
 }

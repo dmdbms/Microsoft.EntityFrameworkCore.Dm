@@ -1,4 +1,5 @@
 using Microsoft.Extensions.Logging;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Model;
 
 namespace Microsoft.EntityFrameworkCore.Diagnostics
 {
@@ -40,7 +41,7 @@ namespace Microsoft.EntityFrameworkCore.Diagnostics
 			ReflexiveConstraintIgnored = 35029
 		}
 
-		private static readonly string _validationPrefix = LoggerCategory<DbLoggerCategory.Model.Validation>.Name + ".";
+		private static readonly string _validationPrefix = LoggerCategory<Validation>.Name + ".";
 
 		public static readonly EventId DecimalTypeDefaultWarning = MakeValidationId(Id.DecimalTypeDefaultWarning);
 

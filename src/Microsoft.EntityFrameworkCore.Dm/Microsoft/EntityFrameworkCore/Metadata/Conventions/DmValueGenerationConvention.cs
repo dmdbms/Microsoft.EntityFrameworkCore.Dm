@@ -6,7 +6,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
 {
 	public class DmValueGenerationConvention : RelationalValueGenerationConvention
 	{
-		public DmValueGenerationConvention([JetBrains.Annotations.NotNull] ProviderConventionSetBuilderDependencies dependencies, [JetBrains.Annotations.NotNull] RelationalConventionSetBuilderDependencies relationalDependencies)
+		public DmValueGenerationConvention([NotNull] ProviderConventionSetBuilderDependencies dependencies, [NotNull] RelationalConventionSetBuilderDependencies relationalDependencies)
 			: base(dependencies, relationalDependencies)
 		{
 		}
@@ -15,22 +15,22 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
 		{
 			if (name == "Dm:ValueGenerationStrategy")
 			{
-				propertyBuilder.ValueGenerated(GetValueGenerated(propertyBuilder.Metadata));
+				propertyBuilder.ValueGenerated(base.GetValueGenerated(propertyBuilder.Metadata), false);
 			}
 			else
 			{
-				base.ProcessPropertyAnnotationChanged(propertyBuilder, name, annotation, oldAnnotation, context);
+				((RelationalValueGenerationConvention)this).ProcessPropertyAnnotationChanged(propertyBuilder, name, annotation, oldAnnotation, context);
 			}
 		}
 
 		protected override ValueGenerated? GetValueGenerated(IConventionProperty property)
 		{
-			return GetValueGenerated(property);
+			return base.GetValueGenerated(property);
 		}
 
-		public new static ValueGenerated? GetValueGenerated([JetBrains.Annotations.NotNull] IProperty property)
+		public static ValueGenerated? GetValueGenerated([NotNull] IProperty property)
 		{
-			return ValueGenerationConvention.GetValueGenerated(property) ?? ((property.GetValueGenerationStrategy() != 0) ? new ValueGenerated?(ValueGenerated.OnAdd) : null);
+			return ValueGenerationConvention.GetValueGenerated((IReadOnlyProperty)(object)property) ?? ((((IReadOnlyProperty)(object)property).GetValueGenerationStrategy() != 0) ? new ValueGenerated?((ValueGenerated)1) : null);
 		}
 	}
 }

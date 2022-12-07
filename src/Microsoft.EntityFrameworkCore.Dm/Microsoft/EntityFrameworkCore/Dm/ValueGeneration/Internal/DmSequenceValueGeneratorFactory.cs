@@ -14,55 +14,55 @@ namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 	{
 		private readonly IDmUpdateSqlGenerator _sqlGenerator;
 
-		public DmSequenceValueGeneratorFactory([JetBrains.Annotations.NotNull] IDmUpdateSqlGenerator sqlGenerator)
+		public DmSequenceValueGeneratorFactory([NotNull] IDmUpdateSqlGenerator sqlGenerator)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(sqlGenerator, "sqlGenerator");
+			Check.NotNull(sqlGenerator, "sqlGenerator");
 			_sqlGenerator = sqlGenerator;
 		}
 
-		public virtual ValueGenerator Create(IProperty property, DmSequenceValueGeneratorState generatorState, IDmRelationalConnection connection, IRawSqlCommandBuilder rawSqlCommandBuilder, IDiagnosticsLogger<DbLoggerCategory.Database.Command> commandLogger)
+		public virtual ValueGenerator Create(IProperty property, DmSequenceValueGeneratorState generatorState, IDmRelationalConnection connection, IRawSqlCommandBuilder rawSqlCommandBuilder, IRelationalCommandDiagnosticsLogger commandLogger)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(property, "property");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(generatorState, "generatorState");
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotNull(connection, "connection");
-			Type type = property.ClrType.UnwrapNullableType().UnwrapEnumType();
+			Check.NotNull<IProperty>(property, "property");
+			Check.NotNull(generatorState, "generatorState");
+			Check.NotNull(connection, "connection");
+			Type type = ((IReadOnlyPropertyBase)property).ClrType.UnwrapNullableType().UnwrapEnumType();
 			if (type == typeof(long))
 			{
-				return new DmSequenceHiLoValueGenerator<long>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<long>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(int))
 			{
-				return new DmSequenceHiLoValueGenerator<int>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<int>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(short))
 			{
-				return new DmSequenceHiLoValueGenerator<short>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<short>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(byte))
 			{
-				return new DmSequenceHiLoValueGenerator<byte>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<byte>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(char))
 			{
-				return new DmSequenceHiLoValueGenerator<char>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<char>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(ulong))
 			{
-				return new DmSequenceHiLoValueGenerator<ulong>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<ulong>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(uint))
 			{
-				return new DmSequenceHiLoValueGenerator<uint>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<uint>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(ushort))
 			{
-				return new DmSequenceHiLoValueGenerator<ushort>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<ushort>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
 			if (type == typeof(sbyte))
 			{
-				return new DmSequenceHiLoValueGenerator<sbyte>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
+				return (ValueGenerator)(object)new DmSequenceHiLoValueGenerator<sbyte>(rawSqlCommandBuilder, _sqlGenerator, generatorState, connection, commandLogger);
 			}
-			throw new ArgumentException(CoreStrings.InvalidValueGeneratorFactoryProperty("DmSequenceValueGeneratorFactory", property.Name, property.DeclaringEntityType.DisplayName()));
+			throw new ArgumentException(CoreStrings.InvalidValueGeneratorFactoryProperty((object)"DmSequenceValueGeneratorFactory", (object)((IReadOnlyPropertyBase)property).Name, (object)((IReadOnlyTypeBase)property.DeclaringEntityType).DisplayName()));
 		}
 	}
 }

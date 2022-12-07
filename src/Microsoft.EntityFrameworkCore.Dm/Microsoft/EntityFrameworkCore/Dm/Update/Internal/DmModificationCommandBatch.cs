@@ -22,25 +22,25 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 
 		private readonly int _maxBatchSize;
 
-		private readonly List<ModificationCommand> _bulkInsertCommands = new List<ModificationCommand>();
+		private readonly List<IReadOnlyModificationCommand> _bulkInsertCommands = new List<IReadOnlyModificationCommand>();
 
 		private int _commandsLeftToLengthCheck = 50;
 
-		protected new virtual IDmUpdateSqlGenerator UpdateSqlGenerator => (IDmUpdateSqlGenerator)base.UpdateSqlGenerator;
+		protected virtual IDmUpdateSqlGenerator UpdateSqlGenerator => (IDmUpdateSqlGenerator)base.UpdateSqlGenerator;
 
-		public DmModificationCommandBatch([JetBrains.Annotations.NotNull] ModificationCommandBatchFactoryDependencies dependencies, int? maxBatchSize)
+		public DmModificationCommandBatch([NotNull] ModificationCommandBatchFactoryDependencies dependencies, int? maxBatchSize)
 			: base(dependencies)
 		{
 			if (maxBatchSize.HasValue && maxBatchSize.Value <= 0)
 			{
-				throw new ArgumentOutOfRangeException("maxBatchSize", RelationalStrings.InvalidMaxBatchSize);
+				throw new ArgumentOutOfRangeException("maxBatchSize", RelationalStrings.InvalidMaxBatchSize((object)maxBatchSize.Value));
 			}
 			_maxBatchSize = Math.Min(maxBatchSize ?? int.MaxValue, 1000);
 		}
 
-		protected override bool CanAddCommand(ModificationCommand modificationCommand)
+		protected override bool CanAddCommand(IReadOnlyModificationCommand modificationCommand)
 		{
-			if (ModificationCommands.Count >= _maxBatchSize)
+			if (((ModificationCommandBatch)this).ModificationCommands.Count >= _maxBatchSize)
 			{
 				return false;
 			}
@@ -57,12 +57,12 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 		{
 			if (--_commandsLeftToLengthCheck < 0)
 			{
-				int length = GetCommandText().Length;
+				int length = base.GetCommandText().Length;
 				if (length >= 134217728)
 				{
 					return false;
 				}
-				int num = length / ModificationCommands.Count;
+				int num = length / ((ModificationCommandBatch)this).ModificationCommands.Count;
 				int num2 = (134217728 - length) / num;
 				_commandsLeftToLengthCheck = Math.Max(1, num2 / 4);
 			}
@@ -74,17 +74,17 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 			return _parameterCount;
 		}
 
-		private static int CountParameters(ModificationCommand modificationCommand)
+		private static int CountParameters(IReadOnlyModificationCommand modificationCommand)
 		{
 			int num = 0;
 			for (int i = 0; i < modificationCommand.ColumnModifications.Count; i++)
 			{
-				ColumnModification columnModification = modificationCommand.ColumnModifications[i];
-				if (columnModification.UseCurrentValueParameter)
+				IColumnModification val = modificationCommand.ColumnModifications[i];
+				if (val.UseCurrentValueParameter)
 				{
 					num++;
 				}
-				if (columnModification.UseOriginalValueParameter)
+				if (val.UseOriginalValueParameter)
 				{
 					num++;
 				}
@@ -100,54 +100,61 @@ namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 
 		protected override string GetCommandText()
 		{
-			if (ModificationCommands.Count > 1)
+			if (((ModificationCommandBatch)this).ModificationCommands.Count > 1)
 			{
-				return "BEGIN " + base.GetCommandText() + GetBulkInsertCommandText(ModificationCommands.Count) + " END; ";
+				return "BEGIN " + base.GetCommandText() + GetBulkInsertCommandText(((ModificationCommandBatch)this).ModificationCommands.Count) + " END; ";
 			}
-			return base.GetCommandText() + GetBulkInsertCommandText(ModificationCommands.Count);
+			return base.GetCommandText() + GetBulkInsertCommandText(((ModificationCommandBatch)this).ModificationCommands.Count);
 		}
 
 		private string GetBulkInsertCommandText(int lastIndex)
 		{
+			//IL_003c: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0041: Unknown result type (might be due to invalid IL or missing references)
+			//IL_005c: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0075: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0077: Invalid comparison between Unknown and I4
 			if (_bulkInsertCommands.Count == 0)
 			{
 				return string.Empty;
 			}
 			StringBuilder stringBuilder = new StringBuilder();
-			ResultSetMapping resultSetMapping = UpdateSqlGenerator.AppendBulkInsertOperation(stringBuilder, _bulkInsertCommands, lastIndex - _bulkInsertCommands.Count);
+			ResultSetMapping val = UpdateSqlGenerator.AppendBulkInsertOperation(stringBuilder, _bulkInsertCommands, lastIndex - _bulkInsertCommands.Count);
 			for (int i = lastIndex - _bulkInsertCommands.Count; i < lastIndex; i++)
 			{
-				CommandResultSet[i] = resultSetMapping;
+				this.CommandResultSet[i] = val;
 			}
-			if (resultSetMapping != 0)
+			if ((int)val > 0)
 			{
-				CommandResultSet[lastIndex - 1] = ResultSetMapping.LastInResultSet;
+                this.CommandResultSet[lastIndex - 1] = (ResultSetMapping)2;
 			}
 			return stringBuilder.ToString();
 		}
 
 		protected override void UpdateCachedCommandText(int commandPosition)
 		{
-			ModificationCommand modificationCommand = ModificationCommands[commandPosition];
-			if (modificationCommand.EntityState == EntityState.Added)
+			//IL_000f: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0015: Invalid comparison between Unknown and I4
+			IReadOnlyModificationCommand val = ((ModificationCommandBatch)this).ModificationCommands[commandPosition];
+			if ((int)val.EntityState == 4)
 			{
-				if (_bulkInsertCommands.Count > 0 && !CanBeInsertedInSameStatement(_bulkInsertCommands[0], modificationCommand))
+				if (_bulkInsertCommands.Count > 0 && !CanBeInsertedInSameStatement(_bulkInsertCommands[0], val))
 				{
-					CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
+					this.CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
 					_bulkInsertCommands.Clear();
 				}
-				_bulkInsertCommands.Add(modificationCommand);
-				LastCachedCommandIndex = commandPosition;
+				_bulkInsertCommands.Add(val);
+                this.LastCachedCommandIndex=commandPosition;
 			}
 			else
 			{
-				CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
+				this.CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
 				_bulkInsertCommands.Clear();
-				base.UpdateCachedCommandText(commandPosition);
+                this.UpdateCachedCommandText(commandPosition);
 			}
 		}
 
-		private static bool CanBeInsertedInSameStatement(ModificationCommand firstCommand, ModificationCommand secondCommand)
+		private static bool CanBeInsertedInSameStatement(IReadOnlyModificationCommand firstCommand, IReadOnlyModificationCommand secondCommand)
 		{
 			return string.Equals(firstCommand.TableName, secondCommand.TableName, StringComparison.Ordinal) && string.Equals(firstCommand.Schema, secondCommand.Schema, StringComparison.Ordinal) && (from o in firstCommand.ColumnModifications
 				where o.IsWrite

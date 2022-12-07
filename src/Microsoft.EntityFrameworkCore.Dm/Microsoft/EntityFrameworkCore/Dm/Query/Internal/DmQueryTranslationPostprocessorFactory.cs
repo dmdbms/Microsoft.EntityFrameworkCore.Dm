@@ -16,7 +16,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual QueryTranslationPostprocessor Create(QueryCompilationContext queryCompilationContext)
 		{
-			return new DmQueryTranslationPostprocessor(_dependencies, _relationalDependencies, queryCompilationContext);
+			return (QueryTranslationPostprocessor)(object)new DmQueryTranslationPostprocessor(_dependencies, _relationalDependencies, queryCompilationContext);
 		}
 	}
 }

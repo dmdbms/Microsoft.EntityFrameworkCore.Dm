@@ -35,5 +35,9 @@ namespace Microsoft.EntityFrameworkCore.Dm.Diagnostics.Internal
 		public EventDefinitionBase LogPrincipalColumnNotFound;
 
 		public EventDefinitionBase LogReflexiveConstraintIgnored;
+
+		public DmLoggingDefinitions()
+		{
+		}
 	}
 }

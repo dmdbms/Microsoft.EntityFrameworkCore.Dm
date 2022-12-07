@@ -1,4 +1,5 @@
 using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Utilities;
 
@@ -8,168 +9,184 @@ namespace Microsoft.EntityFrameworkCore
 	{
 		public const string DefaultHiLoSequenceName = "EntityFrameworkHiLoSequence";
 
-		public static string GetHiLoSequenceName([JetBrains.Annotations.NotNull] this IModel model)
+		public static string GetHiLoSequenceName([NotNull] this IReadOnlyModel model)
 		{
-			return ((string)model["Dm:HiLoSequenceName"]) ?? "EntityFrameworkHiLoSequence";
+			return ((string)((IReadOnlyAnnotatable)model)["Dm:HiLoSequenceName"]) ?? "EntityFrameworkHiLoSequence";
 		}
 
-		public static void SetHiLoSequenceName([JetBrains.Annotations.NotNull] this IMutableModel model, [JetBrains.Annotations.CanBeNull] string name)
+		public static void SetHiLoSequenceName([NotNull] this IMutableModel model, [CanBeNull] string name)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NullButNotEmpty(name, "name");
-			model.SetOrRemoveAnnotation("Dm:HiLoSequenceName", name);
+			Check.NullButNotEmpty(name, "name");
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:HiLoSequenceName", (object)name);
 		}
 
-		public static void SetHiLoSequenceName([JetBrains.Annotations.NotNull] this IConventionModel model, [JetBrains.Annotations.CanBeNull] string name, bool fromDataAnnotation = false)
+		public static void SetHiLoSequenceName([NotNull] this IConventionModel model, [CanBeNull] string name, bool fromDataAnnotation = false)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NullButNotEmpty(name, "name");
-			model.SetOrRemoveAnnotation("Dm:HiLoSequenceName", name, fromDataAnnotation);
+			Check.NullButNotEmpty(name, "name");
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:HiLoSequenceName", (object)name, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetHiLoSequenceNameConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetHiLoSequenceNameConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:HiLoSequenceName")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:HiLoSequenceName");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static string GetHiLoSequenceSchema([JetBrains.Annotations.NotNull] this IModel model)
+		public static string GetHiLoSequenceSchema([NotNull] this IReadOnlyModel model)
 		{
-			return (string)model["Dm:HiLoSequenceSchema"];
+			return (string)((IReadOnlyAnnotatable)model)[("Dm:HiLoSequenceSchema")];
 		}
 
-		public static void SetHiLoSequenceSchema([JetBrains.Annotations.NotNull] this IMutableModel model, [JetBrains.Annotations.CanBeNull] string value)
+		public static void SetHiLoSequenceSchema([NotNull] this IMutableModel model, [CanBeNull] string value)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NullButNotEmpty(value, "value");
-			model.SetOrRemoveAnnotation("Dm:HiLoSequenceSchema", value);
+			Check.NullButNotEmpty(value, "value");
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:HiLoSequenceSchema", (object)value);
 		}
 
-		public static void SetHiLoSequenceSchema([JetBrains.Annotations.NotNull] this IConventionModel model, [JetBrains.Annotations.CanBeNull] string value, bool fromDataAnnotation = false)
+		public static void SetHiLoSequenceSchema([NotNull] this IConventionModel model, [CanBeNull] string value, bool fromDataAnnotation = false)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NullButNotEmpty(value, "value");
-			model.SetOrRemoveAnnotation("Dm:HiLoSequenceSchema", value, fromDataAnnotation);
+			Check.NullButNotEmpty(value, "value");
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:HiLoSequenceSchema", (object)value, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetHiLoSequenceSchemaConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetHiLoSequenceSchemaConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:HiLoSequenceSchema")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:HiLoSequenceSchema");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static int GetIdentitySeed([JetBrains.Annotations.NotNull] this IModel model)
+		public static int GetIdentitySeed([NotNull] this IReadOnlyModel model)
 		{
-			return ((int?)model["Dm:IdentitySeed"]) ?? 1;
+			return ((int?)((IReadOnlyAnnotatable)model)[("Dm:IdentitySeed")]) ?? 1;
 		}
 
-		public static void SetIdentitySeed([JetBrains.Annotations.NotNull] this IMutableModel model, int? seed)
+		public static void SetIdentitySeed([NotNull] this IMutableModel model, int? seed)
 		{
-			model.SetOrRemoveAnnotation("Dm:IdentitySeed", seed);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:IdentitySeed", (object)seed);
 		}
 
-		public static void SetIdentitySeed([JetBrains.Annotations.NotNull] this IConventionModel model, int? seed, bool fromDataAnnotation = false)
+		public static void SetIdentitySeed([NotNull] this IConventionModel model, int? seed, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:IdentitySeed", seed, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:IdentitySeed", (object)seed, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetIdentitySeedConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetIdentitySeedConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:IdentitySeed")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:IdentitySeed");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static int GetIdentityIncrement([JetBrains.Annotations.NotNull] this IModel model)
+		public static int GetIdentityIncrement([NotNull] this IReadOnlyModel model)
 		{
-			return ((int?)model["Dm:IdentityIncrement"]) ?? 1;
+			return ((int?)((IReadOnlyAnnotatable)model)[("Dm:IdentityIncrement")]) ?? 1;
 		}
 
-		public static void SetIdentityIncrement([JetBrains.Annotations.NotNull] this IMutableModel model, int? increment)
+		public static void SetIdentityIncrement([NotNull] this IMutableModel model, int? increment)
 		{
-			model.SetOrRemoveAnnotation("Dm:IdentityIncrement", increment);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:IdentityIncrement", (object)increment);
 		}
 
-		public static void SetIdentityIncrement([JetBrains.Annotations.NotNull] this IConventionModel model, int? increment, bool fromDataAnnotation = false)
+		public static void SetIdentityIncrement([NotNull] this IConventionModel model, int? increment, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:IdentityIncrement", increment, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:IdentityIncrement", (object)increment, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetIdentityIncrementConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetIdentityIncrementConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:IdentityIncrement")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:IdentityIncrement");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static DmValueGenerationStrategy? GetValueGenerationStrategy([JetBrains.Annotations.NotNull] this IModel model)
+		public static DmValueGenerationStrategy? GetValueGenerationStrategy([NotNull] this IReadOnlyModel model)
 		{
-			return (DmValueGenerationStrategy?)model["Dm:ValueGenerationStrategy"];
+			return (DmValueGenerationStrategy?)((IReadOnlyAnnotatable)model)[("Dm:ValueGenerationStrategy")];
 		}
 
-		public static void SetValueGenerationStrategy([JetBrains.Annotations.NotNull] this IMutableModel model, DmValueGenerationStrategy? value)
+		public static void SetValueGenerationStrategy([NotNull] this IMutableModel model, DmValueGenerationStrategy? value)
 		{
-			model.SetOrRemoveAnnotation("Dm:ValueGenerationStrategy", value);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:ValueGenerationStrategy", (object)value);
 		}
 
-		public static void SetValueGenerationStrategy([JetBrains.Annotations.NotNull] this IConventionModel model, DmValueGenerationStrategy? value, bool fromDataAnnotation = false)
+		public static void SetValueGenerationStrategy([NotNull] this IConventionModel model, DmValueGenerationStrategy? value, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:ValueGenerationStrategy", value, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:ValueGenerationStrategy", (object)value, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetValueGenerationStrategyConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetValueGenerationStrategyConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:ValueGenerationStrategy")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:ValueGenerationStrategy");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static string GetDatabaseMaxSize([JetBrains.Annotations.NotNull] this IModel model)
+		public static string GetDatabaseMaxSize([NotNull] this IReadOnlyModel model)
 		{
-			return (string)model["Dm:DatabaseMaxSize"];
+			return (string)((IReadOnlyAnnotatable)model)[("Dm:DatabaseMaxSize")];
 		}
 
-		public static void SetDatabaseMaxSize([JetBrains.Annotations.NotNull] this IMutableModel model, [JetBrains.Annotations.CanBeNull] string value)
+		public static void SetDatabaseMaxSize([NotNull] this IMutableModel model, [CanBeNull] string value)
 		{
-			model.SetOrRemoveAnnotation("Dm:DatabaseMaxSize", value);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:DatabaseMaxSize", (object)value);
 		}
 
-		public static void SetDatabaseMaxSize([JetBrains.Annotations.NotNull] this IConventionModel model, [JetBrains.Annotations.CanBeNull] string value, bool fromDataAnnotation = false)
+		public static void SetDatabaseMaxSize([NotNull] this IConventionModel model, [CanBeNull] string value, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:DatabaseMaxSize", value, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:DatabaseMaxSize", (object)value, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetDatabaseMaxSizeConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetDatabaseMaxSizeConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:DatabaseMaxSize")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:DatabaseMaxSize");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static string GetServiceTierSql([JetBrains.Annotations.NotNull] this IModel model)
+		public static string GetServiceTierSql([NotNull] this IReadOnlyModel model)
 		{
-			return (string)model["Dm:ServiceTierSql"];
+			return (string)((IReadOnlyAnnotatable)model)[("Dm:ServiceTierSql")];
 		}
 
-		public static void SetServiceTierSql([JetBrains.Annotations.NotNull] this IMutableModel model, [JetBrains.Annotations.CanBeNull] string value)
+		public static void SetServiceTierSql([NotNull] this IMutableModel model, [CanBeNull] string value)
 		{
-			model.SetOrRemoveAnnotation("Dm:ServiceTierSql", value);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:ServiceTierSql", (object)value);
 		}
 
-		public static void SetServiceTierSql([JetBrains.Annotations.NotNull] this IConventionModel model, [JetBrains.Annotations.CanBeNull] string value, bool fromDataAnnotation = false)
+		public static void SetServiceTierSql([NotNull] this IConventionModel model, [CanBeNull] string value, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:ServiceTierSql", value, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:ServiceTierSql", (object)value, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetServiceTierSqlConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetServiceTierSqlConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:ServiceTierSql")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:ServiceTierSql");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 
-		public static string GetPerformanceLevelSql([JetBrains.Annotations.NotNull] this IModel model)
+		public static string GetPerformanceLevelSql([NotNull] this IReadOnlyModel model)
 		{
-			return (string)model["Dm:PerformanceLevelSql"];
+			return (string)((IReadOnlyAnnotatable)model)[("Dm:PerformanceLevelSql")];
 		}
 
-		public static void SetPerformanceLevelSql([JetBrains.Annotations.NotNull] this IMutableModel model, [JetBrains.Annotations.CanBeNull] string value)
+		public static void SetPerformanceLevelSql([NotNull] this IMutableModel model, [CanBeNull] string value)
 		{
-			model.SetOrRemoveAnnotation("Dm:PerformanceLevelSql", value);
+			((IMutableAnnotatable)model).SetOrRemoveAnnotation("Dm:PerformanceLevelSql", (object)value);
 		}
 
-		public static void SetPerformanceLevelSql([JetBrains.Annotations.NotNull] this IConventionModel model, [JetBrains.Annotations.CanBeNull] string value, bool fromDataAnnotation = false)
+		public static void SetPerformanceLevelSql([NotNull] this IConventionModel model, [CanBeNull] string value, bool fromDataAnnotation = false)
 		{
-			model.SetOrRemoveAnnotation("Dm:PerformanceLevelSql", value, fromDataAnnotation);
+			((IConventionAnnotatable)model).SetOrRemoveAnnotation("Dm:PerformanceLevelSql", (object)value, fromDataAnnotation);
 		}
 
-		public static ConfigurationSource? GetPerformanceLevelSqlConfigurationSource([JetBrains.Annotations.NotNull] this IConventionModel model)
+		public static ConfigurationSource? GetPerformanceLevelSqlConfigurationSource([NotNull] this IConventionModel model)
 		{
-			return model.FindAnnotation("Dm:PerformanceLevelSql")?.GetConfigurationSource();
+			//IL_001a: Unknown result type (might be due to invalid IL or missing references)
+			IConventionAnnotation obj = ((IConventionAnnotatable)model).FindAnnotation("Dm:PerformanceLevelSql");
+			return (obj != null) ? new ConfigurationSource?(obj.GetConfigurationSource()) : null;
 		}
 	}
 }

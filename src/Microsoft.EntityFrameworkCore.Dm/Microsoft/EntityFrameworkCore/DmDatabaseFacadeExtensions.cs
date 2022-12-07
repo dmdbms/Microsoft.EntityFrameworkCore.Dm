@@ -8,7 +8,7 @@ namespace Microsoft.EntityFrameworkCore
 {
 	public static class DmDatabaseFacadeExtensions
 	{
-		public static bool IsDm([JetBrains.Annotations.NotNull] this DatabaseFacade database)
+		public static bool IsDm([NotNull] this DatabaseFacade database)
 		{
 			return database.ProviderName.Equals(typeof(DmOptionsExtension).GetTypeInfo().Assembly.GetName().Name, StringComparison.Ordinal);
 		}

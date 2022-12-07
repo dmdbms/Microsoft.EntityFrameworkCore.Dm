@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.CompilerServices;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Dm.Extensions;
 using Microsoft.EntityFrameworkCore.Dm.Internal;
@@ -64,21 +65,26 @@ namespace Microsoft.EntityFrameworkCore.Dm.Query.Internal
 
 		public virtual SqlExpression Translate(SqlExpression instance, MethodInfo method, IReadOnlyList<SqlExpression> arguments, IDiagnosticsLogger<DbLoggerCategory.Query> logger)
 		{
+			//IL_00a8: Unknown result type (might be due to invalid IL or missing references)
 			if (_functionMapping.TryGetValue(method, out var value))
 			{
-				SqlExpression sqlExpression = arguments[1];
-				if (!(sqlExpression is ColumnExpression))
+				SqlExpression val = arguments[1];
+				if (!(val is ColumnExpression))
 				{
 					throw new InvalidOperationException(DmStrings.InvalidColumnNameForFreeText);
 				}
-				RelationalTypeMapping typeMapping = sqlExpression.TypeMapping;
+				RelationalTypeMapping typeMapping = val.TypeMapping;
 				SqlExpression item = _sqlExpressionFactory.ApplyTypeMapping(arguments[2], typeMapping);
-				List<SqlExpression> list = new List<SqlExpression> { sqlExpression, item };
+				List<SqlExpression> list = new List<SqlExpression> { val, item };
 				if (arguments.Count == 4)
 				{
-					list.Add(_sqlExpressionFactory.Fragment($"LANGUAGE {((SqlConstantExpression)arguments[3]).Value}"));
+					ISqlExpressionFactory sqlExpressionFactory = _sqlExpressionFactory;
+					DefaultInterpolatedStringHandler defaultInterpolatedStringHandler = new DefaultInterpolatedStringHandler(9, 1);
+					defaultInterpolatedStringHandler.AppendLiteral("LANGUAGE ");
+					defaultInterpolatedStringHandler.AppendFormatted<object>(((SqlConstantExpression)arguments[3]).Value);
+					list.Add((SqlExpression)(object)sqlExpressionFactory.Fragment(defaultInterpolatedStringHandler.ToStringAndClear()));
 				}
-				return _sqlExpressionFactory.Function(value, list, nullable: true, list.Select((SqlExpression a) => false).ToList(), typeof(bool));
+				return (SqlExpression)(object)_sqlExpressionFactory.Function(value, (IEnumerable<SqlExpression>)list, true, (IEnumerable<bool>)list.Select((SqlExpression a) => false).ToList(), typeof(bool), (RelationalTypeMapping)null);
 			}
 			return null;
 		}

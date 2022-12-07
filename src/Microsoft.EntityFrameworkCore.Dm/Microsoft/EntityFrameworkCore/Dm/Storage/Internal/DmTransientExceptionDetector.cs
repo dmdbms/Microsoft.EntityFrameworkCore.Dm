@@ -6,10 +6,10 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 {
 	public class DmTransientExceptionDetector
 	{
-		public static bool ShouldRetryOn([JetBrains.Annotations.NotNull] Exception ex)
+		public static bool ShouldRetryOn([NotNull] Exception ex)
 		{
-			DmException ex2 = ex as DmException;
-			if (ex2 != null)
+			DmException val = (DmException)(object)((ex is DmException) ? ex : null);
+			if (val != null)
 			{
 				return false;
 			}

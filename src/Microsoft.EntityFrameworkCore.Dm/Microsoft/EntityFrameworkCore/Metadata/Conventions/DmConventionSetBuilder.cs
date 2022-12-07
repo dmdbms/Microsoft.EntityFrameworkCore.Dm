@@ -10,7 +10,7 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
 	{
 		private readonly ISqlGenerationHelper _sqlGenerationHelper;
 
-		public DmConventionSetBuilder([JetBrains.Annotations.NotNull] ProviderConventionSetBuilderDependencies dependencies, [JetBrains.Annotations.NotNull] RelationalConventionSetBuilderDependencies relationalDependencies, [JetBrains.Annotations.NotNull] ISqlGenerationHelper sqlGenerationHelper)
+		public DmConventionSetBuilder([NotNull] ProviderConventionSetBuilderDependencies dependencies, [NotNull] RelationalConventionSetBuilderDependencies relationalDependencies, [NotNull] ISqlGenerationHelper sqlGenerationHelper)
 			: base(dependencies, relationalDependencies)
 		{
 			_sqlGenerationHelper = sqlGenerationHelper;
@@ -18,33 +18,46 @@ namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
 
 		public override ConventionSet CreateConventionSet()
 		{
-			ConventionSet conventionSet = base.CreateConventionSet();
-			DmValueGenerationStrategyConvention item = new DmValueGenerationStrategyConvention(Dependencies, RelationalDependencies);
-			conventionSet.ModelInitializedConventions.Add(item);
-			conventionSet.ModelInitializedConventions.Add(new RelationalMaxIdentifierLengthConvention(128, Dependencies, RelationalDependencies));
-			ValueGenerationConvention valueGenerationConvention = new DmValueGenerationConvention(Dependencies, RelationalDependencies);
-			ReplaceConvention(conventionSet.EntityTypeBaseTypeChangedConventions, valueGenerationConvention);
-			ReplaceConvention(conventionSet.EntityTypeAnnotationChangedConventions, (RelationalValueGenerationConvention)valueGenerationConvention);
-			ReplaceConvention(conventionSet.EntityTypePrimaryKeyChangedConventions, valueGenerationConvention);
-			ReplaceConvention(conventionSet.ForeignKeyAddedConventions, valueGenerationConvention);
-			ReplaceConvention(conventionSet.ForeignKeyRemovedConventions, valueGenerationConvention);
-			StoreGenerationConvention newConvention = new DmStoreGenerationConvention(Dependencies, RelationalDependencies);
-			ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, newConvention);
-			ReplaceConvention(conventionSet.PropertyAnnotationChangedConventions, (RelationalValueGenerationConvention)valueGenerationConvention);
-			conventionSet.ModelFinalizingConventions.Add(item);
-			ReplaceConvention(conventionSet.ModelFinalizingConventions, newConvention);
-			return conventionSet;
+			//IL_003e: Unknown result type (might be due to invalid IL or missing references)
+			//IL_0048: Expected O, but got Unknown
+			//IL_0071: Unknown result type (might be due to invalid IL or missing references)
+			//IL_007b: Expected O, but got Unknown
+			//IL_00ce: Unknown result type (might be due to invalid IL or missing references)
+			//IL_00d8: Expected O, but got Unknown
+			ConventionSet val = base.CreateConventionSet();
+			DmValueGenerationStrategyConvention item = new DmValueGenerationStrategyConvention(base.Dependencies, base.RelationalDependencies);
+			val.ModelInitializedConventions.Add((IModelInitializedConvention)(object)item);
+			val.ModelInitializedConventions.Add((IModelInitializedConvention)new RelationalMaxIdentifierLengthConvention(128, base.Dependencies, base.RelationalDependencies));
+			ValueGenerationConvention val2 = (ValueGenerationConvention)(object)new DmValueGenerationConvention(base.Dependencies, base.RelationalDependencies);
+			base.ReplaceConvention<IEntityTypeBaseTypeChangedConvention, ValueGenerationConvention>(val.EntityTypeBaseTypeChangedConventions, val2);
+			base.ReplaceConvention<IEntityTypeAnnotationChangedConvention, RelationalValueGenerationConvention>(val.EntityTypeAnnotationChangedConventions, (RelationalValueGenerationConvention)val2);
+			base.ReplaceConvention<IEntityTypePrimaryKeyChangedConvention, ValueGenerationConvention>(val.EntityTypePrimaryKeyChangedConventions, val2);
+			base.ReplaceConvention<IForeignKeyAddedConvention, ValueGenerationConvention>(val.ForeignKeyAddedConventions, val2);
+			base.ReplaceConvention<IForeignKeyRemovedConvention, ValueGenerationConvention>(val.ForeignKeyRemovedConventions, val2);
+			StoreGenerationConvention val3 = (StoreGenerationConvention)(object)new DmStoreGenerationConvention(base.Dependencies, base.RelationalDependencies);
+			base.ReplaceConvention<IPropertyAnnotationChangedConvention, StoreGenerationConvention>(val.PropertyAnnotationChangedConventions, val3);
+			base.ReplaceConvention<IPropertyAnnotationChangedConvention, RelationalValueGenerationConvention>(val.PropertyAnnotationChangedConventions, (RelationalValueGenerationConvention)val2);
+			val.ModelFinalizingConventions.Add((IModelFinalizingConvention)(object)item);
+			base.ReplaceConvention<IModelFinalizingConvention, StoreGenerationConvention>(val.ModelFinalizingConventions, val3);
+			return val;
 		}
 
 		public static ConventionSet Build()
 		{
-			ServiceProvider provider = new ServiceCollection().AddEntityFrameworkDm().AddDbContext<DbContext>(delegate(IServiceProvider p, DbContextOptionsBuilder o)
+			ServiceProvider provider = EntityFrameworkServiceCollectionExtensions.AddDbContext<DbContext>(new ServiceCollection().AddEntityFrameworkDm(), (Action<IServiceProvider, DbContextOptionsBuilder>)delegate(IServiceProvider p, DbContextOptionsBuilder o)
 			{
 				o.UseDm("Server=.").UseInternalServiceProvider(p);
-			}).BuildServiceProvider();
-			using IServiceScope serviceScope = ServiceProviderServiceExtensions.GetRequiredService<IServiceScopeFactory>(provider).CreateScope();
-			using DbContext context = ServiceProviderServiceExtensions.GetService<DbContext>(serviceScope.ServiceProvider);
-			return ConventionSet.CreateConventionSet(context);
+			}, ServiceLifetime.Scoped, ServiceLifetime.Scoped).BuildServiceProvider();
+			using IServiceScope serviceScope = provider.GetRequiredService<IServiceScopeFactory>().CreateScope();
+			DbContext service = serviceScope.ServiceProvider.GetService<DbContext>();
+			try
+			{
+				return ConventionSet.CreateConventionSet(service);
+			}
+			finally
+			{
+				((IDisposable)service)?.Dispose();
+			}
 		}
 	}
 }

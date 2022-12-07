@@ -10,7 +10,7 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 	{
 		public override string BatchTerminator => Environment.NewLine + "/";
 
-		public DmSqlGenerationHelper([JetBrains.Annotations.NotNull] RelationalSqlGenerationHelperDependencies dependencies)
+		public DmSqlGenerationHelper([NotNull] RelationalSqlGenerationHelperDependencies dependencies)
 			: base(dependencies)
 		{
 		}
@@ -27,12 +27,12 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		public override string EscapeIdentifier(string identifier)
 		{
-			return Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(identifier, "identifier").Replace("\"", "\"\"");
+			return Check.NotEmpty(identifier, "identifier").Replace("\"", "\"\"");
 		}
 
 		public override void EscapeIdentifier(StringBuilder builder, string identifier)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(identifier, "identifier");
+			Check.NotEmpty(identifier, "identifier");
 			int length = builder.Length;
 			builder.Append(identifier);
 			builder.Replace("\"", "\"\"", length, identifier.Length);
@@ -40,14 +40,14 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 
 		public override string DelimitIdentifier(string identifier)
 		{
-			return "\"" + EscapeIdentifier(Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(identifier, "identifier")) + "\"";
+			return "\"" + ((RelationalSqlGenerationHelper)this).EscapeIdentifier(Check.NotEmpty(identifier, "identifier")) + "\"";
 		}
 
 		public override void DelimitIdentifier(StringBuilder builder, string identifier)
 		{
-			Microsoft.EntityFrameworkCore.Utilities.Check.NotEmpty(identifier, "identifier");
+			Check.NotEmpty(identifier, "identifier");
 			builder.Append('"');
-			EscapeIdentifier(builder, identifier);
+			((RelationalSqlGenerationHelper)this).EscapeIdentifier(builder, identifier);
 			builder.Append('"');
 		}
 	}

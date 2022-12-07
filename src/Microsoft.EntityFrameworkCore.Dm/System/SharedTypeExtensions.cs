@@ -139,8 +139,9 @@ namespace System
 
 		public static PropertyInfo GetAnyProperty(this Type type, string name)
 		{
+			string name2 = name;
 			List<PropertyInfo> list = (from p in type.GetRuntimeProperties()
-				where p.Name == name
+				where p.Name == name2
 				select p).ToList();
 			if (list.Count > 1)
 			{
@@ -214,17 +215,7 @@ namespace System
 			{
 				yield break;
 			}
-			IEnumerable<Type> enumerable;
-			if (!interfaceOrBaseType.GetTypeInfo().IsInterface)
-			{
-				enumerable = type.GetBaseTypes();
-			}
-			else
-			{
-				IEnumerable<Type> implementedInterfaces = typeInfo.ImplementedInterfaces;
-				enumerable = implementedInterfaces;
-			}
-			IEnumerable<Type> baseTypes = enumerable;
+			IEnumerable<Type> baseTypes = (interfaceOrBaseType.GetTypeInfo().IsInterface ? typeInfo.ImplementedInterfaces : type.GetBaseTypes());
 			foreach (Type baseType in baseTypes)
 			{
 				if (baseType.GetTypeInfo().IsGenericType && baseType.GetGenericTypeDefinition() == interfaceOrBaseType)
@@ -259,12 +250,13 @@ namespace System
 
 		public static ConstructorInfo GetDeclaredConstructor(this Type type, Type[] types)
 		{
-			if (types == null)
+			Type[] types2 = types;
+			if (types2 == null)
 			{
-				types = Array.Empty<Type>();
+				types2 = Array.Empty<Type>();
 			}
 			return type.GetTypeInfo().DeclaredConstructors.SingleOrDefault((ConstructorInfo c) => !c.IsStatic && (from p in c.GetParameters()
-				select p.ParameterType).SequenceEqual(types));
+				select p.ParameterType).SequenceEqual(types2));
 		}
 
 		public static IEnumerable<PropertyInfo> GetPropertiesInHierarchy(this Type type, string name)
@@ -307,8 +299,9 @@ namespace System
 
 		public static IEnumerable<MemberInfo> GetMembersInHierarchy(this Type type, string name)
 		{
+			string name2 = name;
 			return from m in type.GetMembersInHierarchy()
-				where m.Name == name
+				where m.Name == name2
 				select m;
 		}
 

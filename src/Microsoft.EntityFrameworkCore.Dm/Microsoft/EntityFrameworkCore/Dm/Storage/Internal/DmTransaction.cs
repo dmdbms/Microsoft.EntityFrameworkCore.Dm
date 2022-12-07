@@ -1,8 +1,8 @@
 using System;
 using System.Data.Common;
-using System.Diagnostics.CodeAnalysis;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Storage;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
 namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 {
@@ -10,14 +10,13 @@ namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 	{
 		private static readonly bool _useOldBehavior = AppContext.TryGetSwitch("Microsoft.EntityFrameworkCore.Issue23305", out var isEnabled) && isEnabled;
 
-		public DmTransaction([NotNull] IRelationalConnection connection, [NotNull] DbTransaction transaction, Guid transactionId, [NotNull] IDiagnosticsLogger<DbLoggerCategory.Database.Transaction> logger, bool transactionOwned)
-			: base(connection, transaction, transactionId, logger, transactionOwned)
+		public DmTransaction(IRelationalConnection connection, DbTransaction transaction, Guid transactionId, IDiagnosticsLogger<Transaction> logger, bool transactionOwned, ISqlGenerationHelper sqlGenerationHelper)
+			: base(connection, transaction, transactionId, logger, transactionOwned, sqlGenerationHelper)
 		{
 		}
 
-		protected override string GetReleaseSavepointSql([NotNull] string name)
+		public override void ReleaseSavepoint(string name)
 		{
-			return "RELEASE_SAVEPOINT('" + name + "')";
 		}
 	}
 }
