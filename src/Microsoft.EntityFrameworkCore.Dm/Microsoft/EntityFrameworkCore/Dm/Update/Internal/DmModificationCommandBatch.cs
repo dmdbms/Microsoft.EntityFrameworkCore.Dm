@@ -1,170 +1,131 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Microsoft.EntityFrameworkCore.Dm.Update.Internal.DmModificationCommandBatch
+// Assembly: Microsoft.EntityFrameworkCore.Dm, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 517571CD-6A2C-4476-8E0F-892E361CCCD8
+// Assembly location: E:\主同步盘\我的坚果云\桌面文件夹\Microsoft.EntityFrameworkCore.Dm.dll
+
+using JetBrains.Annotations;
+using Microsoft.EntityFrameworkCore.Diagnostics;
+using Microsoft.EntityFrameworkCore.Update;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
-using JetBrains.Annotations;
-using Microsoft.EntityFrameworkCore.Diagnostics;
-using Microsoft.EntityFrameworkCore.Update;
+
+
 
 namespace Microsoft.EntityFrameworkCore.Dm.Update.Internal
 {
-	public class DmModificationCommandBatch : AffectedCountModificationCommandBatch
-	{
-		private const int DefaultNetworkPacketSizeBytes = 4096;
+  public class DmModificationCommandBatch : AffectedCountModificationCommandBatch
+  {
+    private const int DefaultNetworkPacketSizeBytes = 4096;
+    private const int MaxScriptLength = 134217728;
+    private const int MaxParameterCount = 2100;
+    private const int MaxRowCount = 1000;
+    private int _parameterCount = 1;
+    private readonly int _maxBatchSize;
+    private readonly List<IReadOnlyModificationCommand> _bulkInsertCommands = new List<IReadOnlyModificationCommand>();
+    private int _commandsLeftToLengthCheck = 50;
 
-		private const int MaxScriptLength = 134217728;
+    public DmModificationCommandBatch(
+      [NotNull] ModificationCommandBatchFactoryDependencies dependencies,
+      int? maxBatchSize)
+      : base(dependencies)
+    {
+      if (maxBatchSize.HasValue && maxBatchSize.Value <= 0)
+        throw new ArgumentOutOfRangeException(nameof (maxBatchSize), RelationalStrings.InvalidMaxBatchSize((object) maxBatchSize.Value));
+      this._maxBatchSize = Math.Min(maxBatchSize ?? int.MaxValue, 1000);
+    }
 
-		private const int MaxParameterCount = 2100;
+    protected override IDmUpdateSqlGenerator UpdateSqlGenerator => (IDmUpdateSqlGenerator) base.UpdateSqlGenerator;
 
-		private const int MaxRowCount = 1000;
+    protected override bool CanAddCommand(IReadOnlyModificationCommand modificationCommand)
+    {
+      if (((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count >= this._maxBatchSize)
+        return false;
+      int num = DmModificationCommandBatch.CountParameters(modificationCommand);
+      if (this._parameterCount + num >= 2100)
+        return false;
+      this._parameterCount += num;
+      return true;
+    }
 
-		private int _parameterCount = 1;
+    protected override bool IsCommandTextValid()
+    {
+      if (--this._commandsLeftToLengthCheck < 0)
+      {
+        int length = base.GetCommandText().Length;
+        if (length >= 134217728)
+          return false;
+        int num = length / ((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count;
+        this._commandsLeftToLengthCheck = Math.Max(1, (134217728 - length) / num / 4);
+      }
+      return true;
+    }
 
-		private readonly int _maxBatchSize;
+    protected override int GetParameterCount() => this._parameterCount;
 
-		private readonly List<IReadOnlyModificationCommand> _bulkInsertCommands = new List<IReadOnlyModificationCommand>();
+    private static int CountParameters(IReadOnlyModificationCommand modificationCommand)
+    {
+      int num = 0;
+      for (int index = 0; index < ((IReadOnlyCollection<IColumnModification>) modificationCommand.ColumnModifications).Count; ++index)
+      {
+        IColumnModification columnModification = modificationCommand.ColumnModifications[index];
+        if (columnModification.UseCurrentValueParameter)
+          ++num;
+        if (columnModification.UseOriginalValueParameter)
+          ++num;
+      }
+      return num;
+    }
 
-		private int _commandsLeftToLengthCheck = 50;
+    protected virtual void ResetCommandText()
+    {
+      base.ResetCommandText();
+      this._bulkInsertCommands.Clear();
+    }
 
-		protected virtual IDmUpdateSqlGenerator UpdateSqlGenerator => (IDmUpdateSqlGenerator)base.UpdateSqlGenerator;
+    protected virtual string GetCommandText() => ((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count > 1 ? "BEGIN " + base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count) + " END; " : base.GetCommandText() + this.GetBulkInsertCommandText(((IReadOnlyCollection<IReadOnlyModificationCommand>) ((ModificationCommandBatch) this).ModificationCommands).Count);
 
-		public DmModificationCommandBatch([NotNull] ModificationCommandBatchFactoryDependencies dependencies, int? maxBatchSize)
-			: base(dependencies)
-		{
-			if (maxBatchSize.HasValue && maxBatchSize.Value <= 0)
-			{
-				throw new ArgumentOutOfRangeException("maxBatchSize", RelationalStrings.InvalidMaxBatchSize((object)maxBatchSize.Value));
-			}
-			_maxBatchSize = Math.Min(maxBatchSize ?? int.MaxValue, 1000);
-		}
+    private string GetBulkInsertCommandText(int lastIndex)
+    {
+      if (this._bulkInsertCommands.Count == 0)
+        return string.Empty;
+      StringBuilder commandStringBuilder = new StringBuilder();
+      ResultSetMapping resultSetMapping = this.UpdateSqlGenerator.AppendBulkInsertOperation(commandStringBuilder, (IReadOnlyList<IReadOnlyModificationCommand>) this._bulkInsertCommands, lastIndex - this._bulkInsertCommands.Count);
+      for (int index = lastIndex - this._bulkInsertCommands.Count; index < lastIndex; ++index)
+        base.CommandResultSet[index] = resultSetMapping;
+      if (resultSetMapping > 0)
+       base.CommandResultSet[lastIndex - 1] = (ResultSetMapping) 2;
+      return commandStringBuilder.ToString();
+    }
 
-		protected override bool CanAddCommand(IReadOnlyModificationCommand modificationCommand)
-		{
-			if (((ModificationCommandBatch)this).ModificationCommands.Count >= _maxBatchSize)
-			{
-				return false;
-			}
-			int num = CountParameters(modificationCommand);
-			if (_parameterCount + num >= 2100)
-			{
-				return false;
-			}
-			_parameterCount += num;
-			return true;
-		}
+    protected override void UpdateCachedCommandText(int commandPosition)
+    {
+      IReadOnlyModificationCommand modificationCommand = ((ModificationCommandBatch) this).ModificationCommands[commandPosition];
+      if (modificationCommand.EntityState == (EntityState)4)
+      {
+        if (this._bulkInsertCommands.Count > 0 && !DmModificationCommandBatch.CanBeInsertedInSameStatement(this._bulkInsertCommands[0], modificationCommand))
+        {
+         base.CachedCommandText.Append(this.GetBulkInsertCommandText(commandPosition));
+          this._bulkInsertCommands.Clear();
+        }
+        this._bulkInsertCommands.Add(modificationCommand);
+                base.LastCachedCommandIndex = commandPosition;
+      }
+      else
+      {
+                base.CachedCommandText.Append(this.GetBulkInsertCommandText(commandPosition));
+        this._bulkInsertCommands.Clear();
+                base.UpdateCachedCommandText(commandPosition);
+      }
+    }
 
-		protected override bool IsCommandTextValid()
-		{
-			if (--_commandsLeftToLengthCheck < 0)
-			{
-				int length = base.GetCommandText().Length;
-				if (length >= 134217728)
-				{
-					return false;
-				}
-				int num = length / ((ModificationCommandBatch)this).ModificationCommands.Count;
-				int num2 = (134217728 - length) / num;
-				_commandsLeftToLengthCheck = Math.Max(1, num2 / 4);
-			}
-			return true;
-		}
-
-		protected override int GetParameterCount()
-		{
-			return _parameterCount;
-		}
-
-		private static int CountParameters(IReadOnlyModificationCommand modificationCommand)
-		{
-			int num = 0;
-			for (int i = 0; i < modificationCommand.ColumnModifications.Count; i++)
-			{
-				IColumnModification val = modificationCommand.ColumnModifications[i];
-				if (val.UseCurrentValueParameter)
-				{
-					num++;
-				}
-				if (val.UseOriginalValueParameter)
-				{
-					num++;
-				}
-			}
-			return num;
-		}
-
-		protected override void ResetCommandText()
-		{
-			base.ResetCommandText();
-			_bulkInsertCommands.Clear();
-		}
-
-		protected override string GetCommandText()
-		{
-			if (((ModificationCommandBatch)this).ModificationCommands.Count > 1)
-			{
-				return "BEGIN " + base.GetCommandText() + GetBulkInsertCommandText(((ModificationCommandBatch)this).ModificationCommands.Count) + " END; ";
-			}
-			return base.GetCommandText() + GetBulkInsertCommandText(((ModificationCommandBatch)this).ModificationCommands.Count);
-		}
-
-		private string GetBulkInsertCommandText(int lastIndex)
-		{
-			//IL_003c: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0041: Unknown result type (might be due to invalid IL or missing references)
-			//IL_005c: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0075: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0077: Invalid comparison between Unknown and I4
-			if (_bulkInsertCommands.Count == 0)
-			{
-				return string.Empty;
-			}
-			StringBuilder stringBuilder = new StringBuilder();
-			ResultSetMapping val = UpdateSqlGenerator.AppendBulkInsertOperation(stringBuilder, _bulkInsertCommands, lastIndex - _bulkInsertCommands.Count);
-			for (int i = lastIndex - _bulkInsertCommands.Count; i < lastIndex; i++)
-			{
-				this.CommandResultSet[i] = val;
-			}
-			if ((int)val > 0)
-			{
-                this.CommandResultSet[lastIndex - 1] = (ResultSetMapping)2;
-			}
-			return stringBuilder.ToString();
-		}
-
-		protected override void UpdateCachedCommandText(int commandPosition)
-		{
-			//IL_000f: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0015: Invalid comparison between Unknown and I4
-			IReadOnlyModificationCommand val = ((ModificationCommandBatch)this).ModificationCommands[commandPosition];
-			if ((int)val.EntityState == 4)
-			{
-				if (_bulkInsertCommands.Count > 0 && !CanBeInsertedInSameStatement(_bulkInsertCommands[0], val))
-				{
-					this.CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
-					_bulkInsertCommands.Clear();
-				}
-				_bulkInsertCommands.Add(val);
-                this.LastCachedCommandIndex=commandPosition;
-			}
-			else
-			{
-				this.CachedCommandText.Append(GetBulkInsertCommandText(commandPosition));
-				_bulkInsertCommands.Clear();
-                this.UpdateCachedCommandText(commandPosition);
-			}
-		}
-
-		private static bool CanBeInsertedInSameStatement(IReadOnlyModificationCommand firstCommand, IReadOnlyModificationCommand secondCommand)
-		{
-			return string.Equals(firstCommand.TableName, secondCommand.TableName, StringComparison.Ordinal) && string.Equals(firstCommand.Schema, secondCommand.Schema, StringComparison.Ordinal) && (from o in firstCommand.ColumnModifications
-				where o.IsWrite
-				select o.ColumnName).SequenceEqual(from o in secondCommand.ColumnModifications
-				where o.IsWrite
-				select o.ColumnName) && (from o in firstCommand.ColumnModifications
-				where o.IsRead
-				select o.ColumnName).SequenceEqual(from o in secondCommand.ColumnModifications
-				where o.IsRead
-				select o.ColumnName);
-		}
-	}
+    private static bool CanBeInsertedInSameStatement(
+      IReadOnlyModificationCommand firstCommand,
+      IReadOnlyModificationCommand secondCommand)
+    {
+      return string.Equals(firstCommand.TableName, secondCommand.TableName, StringComparison.Ordinal) && string.Equals(firstCommand.Schema, secondCommand.Schema, StringComparison.Ordinal) && ((IEnumerable<IColumnModification>) firstCommand.ColumnModifications).Where<IColumnModification>((Func<IColumnModification, bool>) (o => o.IsWrite)).Select<IColumnModification, string>((Func<IColumnModification, string>) (o => o.ColumnName)).SequenceEqual<string>(((IEnumerable<IColumnModification>) secondCommand.ColumnModifications).Where<IColumnModification>((Func<IColumnModification, bool>) (o => o.IsWrite)).Select<IColumnModification, string>((Func<IColumnModification, string>) (o => o.ColumnName))) && ((IEnumerable<IColumnModification>) firstCommand.ColumnModifications).Where<IColumnModification>((Func<IColumnModification, bool>) (o => o.IsRead)).Select<IColumnModification, string>((Func<IColumnModification, string>) (o => o.ColumnName)).SequenceEqual<string>(((IEnumerable<IColumnModification>) secondCommand.ColumnModifications).Where<IColumnModification>((Func<IColumnModification, bool>) (o => o.IsRead)).Select<IColumnModification, string>((Func<IColumnModification, string>) (o => o.ColumnName)));
+    }
+  }
 }

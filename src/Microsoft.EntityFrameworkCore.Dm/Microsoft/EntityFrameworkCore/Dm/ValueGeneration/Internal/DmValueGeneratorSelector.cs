@@ -1,4 +1,9 @@
-using System;
+﻿// Decompiled with JetBrains decompiler
+// Type: Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal.DmValueGeneratorSelector
+// Assembly: Microsoft.EntityFrameworkCore.Dm, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 517571CD-6A2C-4476-8E0F-892E361CCCD8
+// Assembly location: E:\主同步盘\我的坚果云\桌面文件夹\Microsoft.EntityFrameworkCore.Dm.dll
+
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Diagnostics;
 using Microsoft.EntityFrameworkCore.Dm.Storage.Internal;
@@ -6,45 +11,47 @@ using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage;
 using Microsoft.EntityFrameworkCore.Utilities;
 using Microsoft.EntityFrameworkCore.ValueGeneration;
+using System;
+
+
 
 namespace Microsoft.EntityFrameworkCore.Dm.ValueGeneration.Internal
 {
-	public class DmValueGeneratorSelector : RelationalValueGeneratorSelector
-	{
-		private readonly IDmSequenceValueGeneratorFactory _sequenceFactory;
+  public class DmValueGeneratorSelector : RelationalValueGeneratorSelector
+  {
+    private readonly IDmSequenceValueGeneratorFactory _sequenceFactory;
+    private readonly IDmRelationalConnection _connection;
+    private readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
+    private readonly IRelationalCommandDiagnosticsLogger _commandLogger;
 
-		private readonly IDmRelationalConnection _connection;
+    public DmValueGeneratorSelector(
+      [NotNull] ValueGeneratorSelectorDependencies dependencies,
+      [NotNull] IDmSequenceValueGeneratorFactory sequenceFactory,
+      [NotNull] IDmRelationalConnection connection,
+      [NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder,
+      [NotNull] IRelationalCommandDiagnosticsLogger commandLogger)
+      : base(dependencies)
+    {
+      this._sequenceFactory = sequenceFactory;
+      this._connection = connection;
+      this._rawSqlCommandBuilder = rawSqlCommandBuilder;
+      this._commandLogger = commandLogger;
+    }
 
-		private readonly IRawSqlCommandBuilder _rawSqlCommandBuilder;
+    public virtual IDmValueGeneratorCache Cache => (IDmValueGeneratorCache) ((ValueGeneratorSelector) this).Cache;
 
-		private readonly IRelationalCommandDiagnosticsLogger _commandLogger;
+    public virtual ValueGenerator Select(IProperty property, IEntityType entityType)
+    {
+      Check.NotNull<IProperty>(property, nameof (property));
+      Check.NotNull<IEntityType>(entityType, nameof (entityType));
+      return ((IReadOnlyProperty) property).GetValueGeneratorFactory() != null || ((IReadOnlyProperty) property).GetValueGenerationStrategy() != DmValueGenerationStrategy.SequenceHiLo ? ((ValueGeneratorSelector) this).Select(property, entityType) : this._sequenceFactory.Create(property, this.Cache.GetOrAddSequenceState(property), this._connection, this._rawSqlCommandBuilder, this._commandLogger);
+    }
 
-		public virtual IDmValueGeneratorCache Cache => (IDmValueGeneratorCache)((ValueGeneratorSelector)this).Cache;
-
-		public DmValueGeneratorSelector([NotNull] ValueGeneratorSelectorDependencies dependencies, [NotNull] IDmSequenceValueGeneratorFactory sequenceFactory, [NotNull] IDmRelationalConnection connection, [NotNull] IRawSqlCommandBuilder rawSqlCommandBuilder, [NotNull] IRelationalCommandDiagnosticsLogger commandLogger)
-			: base(dependencies)
-		{
-			_sequenceFactory = sequenceFactory;
-			_connection = connection;
-			_rawSqlCommandBuilder = rawSqlCommandBuilder;
-			_commandLogger = commandLogger;
-		}
-
-		public override ValueGenerator Select(IProperty property, IEntityType entityType)
-		{
-			Check.NotNull<IProperty>(property, "property");
-			Check.NotNull<IEntityType>(entityType, "entityType");
-			return (ValueGenerator)((((IReadOnlyProperty)property).GetValueGeneratorFactory() == null && ((IReadOnlyProperty)(object)property).GetValueGenerationStrategy() == DmValueGenerationStrategy.SequenceHiLo) ? ((object)_sequenceFactory.Create(property, Cache.GetOrAddSequenceState(property), _connection, _rawSqlCommandBuilder, _commandLogger)) : ((object)((ValueGeneratorSelector)this).Select(property, entityType)));
-		}
-
-		public override ValueGenerator Create(IProperty property, IEntityType entityType)
-		{
-			//IL_0040: Unknown result type (might be due to invalid IL or missing references)
-			//IL_004f: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0056: Unknown result type (might be due to invalid IL or missing references)
-			Check.NotNull<IProperty>(property, "property");
-			Check.NotNull<IEntityType>(entityType, "entityType");
-			return (ValueGenerator)((!(((IReadOnlyPropertyBase)property).ClrType.UnwrapNullableType() == typeof(Guid))) ? ((RelationalValueGeneratorSelector)this).Create(property, entityType) : (((int)((IReadOnlyProperty)property).ValueGenerated == 0 || RelationalPropertyExtensions.GetDefaultValueSql((IReadOnlyProperty)(object)property) != null) ? ((object)new TemporaryGuidValueGenerator()) : ((object)new GuidValueGenerator())));
-		}
-	}
+    public virtual ValueGenerator Create(IProperty property, IEntityType entityType)
+    {
+      Check.NotNull<IProperty>(property, nameof (property));
+      Check.NotNull<IEntityType>(entityType, nameof (entityType));
+      return ((IReadOnlyPropertyBase) property).ClrType.UnwrapNullableType() == typeof (Guid) ? (((IReadOnlyProperty) property).ValueGenerated == null || RelationalPropertyExtensions.GetDefaultValueSql((IReadOnlyProperty) property) != null ? (ValueGenerator) new TemporaryGuidValueGenerator() : (ValueGenerator) new GuidValueGenerator()) : base.Create(property, entityType);
+    }
+  }
 }

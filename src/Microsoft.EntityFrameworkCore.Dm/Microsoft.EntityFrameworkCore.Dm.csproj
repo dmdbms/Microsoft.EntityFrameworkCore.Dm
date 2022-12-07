@@ -3,6 +3,7 @@
 		<AssemblyName>Microsoft.EntityFrameworkCore.Dm</AssemblyName>
 		<GenerateAssemblyInfo>False</GenerateAssemblyInfo>
 		<TargetFramework>net6.0</TargetFramework>
+		<Nullable>disable</Nullable>
 	</PropertyGroup>
 	<PropertyGroup>
 		<AllowUnsafeBlocks>True</AllowUnsafeBlocks>
@@ -35,6 +36,6 @@
 	</ItemGroup>
 	<ItemGroup>
 		<PackageReference Include="dmdbms.DmProvider" Version="1.1.3" />
-		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.11" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="6.0.0" />
 	</ItemGroup>
 </Project>

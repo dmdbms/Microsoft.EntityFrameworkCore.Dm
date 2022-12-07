@@ -1,3 +1,9 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Microsoft.EntityFrameworkCore.Dm.Storage.Internal.WrappedDmDataReader
+// Assembly: Microsoft.EntityFrameworkCore.Dm, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 517571CD-6A2C-4476-8E0F-892E361CCCD8
+// Assembly location: E:\主同步盘\我的坚果云\桌面文件夹\Microsoft.EntityFrameworkCore.Dm.dll
+
 using System;
 using System.Collections;
 using System.Data.Common;
@@ -6,259 +12,165 @@ using System.Linq.Expressions;
 using System.Threading;
 using System.Threading.Tasks;
 
+
+
 namespace Microsoft.EntityFrameworkCore.Dm.Storage.Internal
 {
-	public class WrappedDmDataReader : DbDataReader
-	{
-		private DbDataReader _reader;
+  public class WrappedDmDataReader : DbDataReader
+  {
+    private DbDataReader _reader;
+    private bool _disposed;
 
-		private bool _disposed;
+    internal WrappedDmDataReader(DbDataReader reader) => this._reader = reader;
 
-		public override int FieldCount => GetReader().FieldCount;
+    public override bool GetBoolean(int ordinal) => this.GetReader().GetBoolean(ordinal);
 
-		public override object this[int ordinal] => GetReader()[ordinal];
+    public override byte GetByte(int ordinal) => this.GetReader().GetByte(ordinal);
 
-		public override object this[string name] => GetReader()[name];
+    public override long GetBytes(
+      int ordinal,
+      long dataOffset,
+      byte[] buffer,
+      int bufferOffset,
+      int length)
+    {
+      return this.GetReader().GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
+    }
 
-		public override int RecordsAffected => GetReader().RecordsAffected;
+    public override char GetChar(int ordinal) => Convert.ToChar(this.GetReader().GetByte(ordinal));
 
-		public override bool HasRows => GetReader().HasRows;
+    public override long GetChars(
+      int ordinal,
+      long dataOffset,
+      char[] buffer,
+      int bufferOffset,
+      int length)
+    {
+      return this.GetReader().GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
+    }
 
-		public override bool IsClosed => _reader == null || _reader.IsClosed;
+    public override string GetDataTypeName(int ordinal) => this.GetReader().GetDataTypeName(ordinal);
 
-		public override int Depth => GetReader().Depth;
+    public override DateTime GetDateTime(int ordinal) => this.GetReader().GetDateTime(ordinal);
 
-		public override int VisibleFieldCount => GetReader().VisibleFieldCount;
+    public override Decimal GetDecimal(int ordinal) => this.GetReader().GetDecimal(ordinal);
 
-		internal WrappedDmDataReader(DbDataReader reader)
-		{
-			_reader = reader;
-		}
+    public override double GetDouble(int ordinal) => this.GetReader().GetDouble(ordinal);
 
-		public override bool GetBoolean(int ordinal)
-		{
-			return GetReader().GetBoolean(ordinal);
-		}
+    public override Type GetFieldType(int ordinal) => this.GetReader().GetFieldType(ordinal);
 
-		public override byte GetByte(int ordinal)
-		{
-			return GetReader().GetByte(ordinal);
-		}
+    public override float GetFloat(int ordinal) => this.GetReader().GetFloat(ordinal);
 
-		public override long GetBytes(int ordinal, long dataOffset, byte[] buffer, int bufferOffset, int length)
-		{
-			return GetReader().GetBytes(ordinal, dataOffset, buffer, bufferOffset, length);
-		}
+    public override Guid GetGuid(int ordinal) => this.GetReader().GetGuid(ordinal);
 
-		public override char GetChar(int ordinal)
-		{
-			return Convert.ToChar(GetReader().GetByte(ordinal));
-		}
+    public override short GetInt16(int ordinal) => this.GetReader().GetInt16(ordinal);
 
-		public override long GetChars(int ordinal, long dataOffset, char[] buffer, int bufferOffset, int length)
-		{
-			return GetReader().GetChars(ordinal, dataOffset, buffer, bufferOffset, length);
-		}
+    public override int GetInt32(int ordinal) => this.GetReader().GetInt32(ordinal);
 
-		public override string GetDataTypeName(int ordinal)
-		{
-			return GetReader().GetDataTypeName(ordinal);
-		}
+    public override long GetInt64(int ordinal) => this.GetReader().GetInt64(ordinal);
 
-		public override DateTime GetDateTime(int ordinal)
-		{
-			return GetReader().GetDateTime(ordinal);
-		}
+    public override string GetName(int ordinal) => this.GetReader().GetName(ordinal);
 
-		public override decimal GetDecimal(int ordinal)
-		{
-			return GetReader().GetDecimal(ordinal);
-		}
+    public override int GetOrdinal(string name) => this.GetReader().GetOrdinal(name);
 
-		public override double GetDouble(int ordinal)
-		{
-			return GetReader().GetDouble(ordinal);
-		}
+    public override string GetString(int ordinal) => this.GetReader().GetString(ordinal);
 
-		public override Type GetFieldType(int ordinal)
-		{
-			return GetReader().GetFieldType(ordinal);
-		}
+    public override object GetValue(int ordinal)
+    {
+      try
+      {
+        return this.GetReader().GetValue(ordinal);
+      }
+      catch (InvalidCastException ex)
+      {
+        return this.ConvertWithReflection<object>(ordinal, ex);
+      }
+    }
 
-		public override float GetFloat(int ordinal)
-		{
-			return GetReader().GetFloat(ordinal);
-		}
+    public override int GetValues(object[] values) => this.GetReader().GetValues(values);
 
-		public override Guid GetGuid(int ordinal)
-		{
-			return GetReader().GetGuid(ordinal);
-		}
+    public override bool IsDBNull(int ordinal) => this.GetReader().IsDBNull(ordinal);
 
-		public override short GetInt16(int ordinal)
-		{
-			return GetReader().GetInt16(ordinal);
-		}
+    public override int FieldCount => this.GetReader().FieldCount;
 
-		public override int GetInt32(int ordinal)
-		{
-			return GetReader().GetInt32(ordinal);
-		}
+    public override object this[int ordinal] => this.GetReader()[ordinal];
 
-		public override long GetInt64(int ordinal)
-		{
-			return GetReader().GetInt64(ordinal);
-		}
+    public override object this[string name] => this.GetReader()[name];
 
-		public override string GetName(int ordinal)
-		{
-			return GetReader().GetName(ordinal);
-		}
+    public override int RecordsAffected => this.GetReader().RecordsAffected;
 
-		public override int GetOrdinal(string name)
-		{
-			return GetReader().GetOrdinal(name);
-		}
+    public override bool HasRows => this.GetReader().HasRows;
 
-		public override string GetString(int ordinal)
-		{
-			return GetReader().GetString(ordinal);
-		}
+    public override bool IsClosed => this._reader == null || this._reader.IsClosed;
 
-		public override object GetValue(int ordinal)
-		{
-			try
-			{
-				return GetReader().GetValue(ordinal);
-			}
-			catch (InvalidCastException e)
-			{
-				return ConvertWithReflection<object>(ordinal, e);
-			}
-		}
+    public override int Depth => this.GetReader().Depth;
 
-		public override int GetValues(object[] values)
-		{
-			return GetReader().GetValues(values);
-		}
+    public override IEnumerator GetEnumerator() => this.GetReader().GetEnumerator();
 
-		public override bool IsDBNull(int ordinal)
-		{
-			return GetReader().IsDBNull(ordinal);
-		}
+    public override Type GetProviderSpecificFieldType(int ordinal) => this.GetReader().GetProviderSpecificFieldType(ordinal);
 
-		public override IEnumerator GetEnumerator()
-		{
-			return GetReader().GetEnumerator();
-		}
+    public override object GetProviderSpecificValue(int ordinal) => this.GetReader().GetProviderSpecificValue(ordinal);
 
-		public override Type GetProviderSpecificFieldType(int ordinal)
-		{
-			return GetReader().GetProviderSpecificFieldType(ordinal);
-		}
+    public override int GetProviderSpecificValues(object[] values) => this.GetReader().GetProviderSpecificValues(values);
 
-		public override object GetProviderSpecificValue(int ordinal)
-		{
-			return GetReader().GetProviderSpecificValue(ordinal);
-		}
+    public override Stream GetStream(int ordinal) => this.GetReader().GetStream(ordinal);
 
-		public override int GetProviderSpecificValues(object[] values)
-		{
-			return GetReader().GetProviderSpecificValues(values);
-		}
+    public override TextReader GetTextReader(int ordinal) => this.GetReader().GetTextReader(ordinal);
 
-		public override Stream GetStream(int ordinal)
-		{
-			return GetReader().GetStream(ordinal);
-		}
+    public override Task<bool> IsDBNullAsync(int ordinal, CancellationToken cancellationToken) => this.GetReader().IsDBNullAsync(ordinal, cancellationToken);
 
-		public override TextReader GetTextReader(int ordinal)
-		{
-			return GetReader().GetTextReader(ordinal);
-		}
+    public override int VisibleFieldCount => this.GetReader().VisibleFieldCount;
 
-		public override Task<bool> IsDBNullAsync(int ordinal, CancellationToken cancellationToken)
-		{
-			return GetReader().IsDBNullAsync(ordinal, cancellationToken);
-		}
+    public override bool NextResult() => this.GetReader().NextResult();
 
-		public override bool NextResult()
-		{
-			return GetReader().NextResult();
-		}
+    public override Task<bool> NextResultAsync(CancellationToken cancellationToken) => this.GetReader().NextResultAsync(cancellationToken);
 
-		public override Task<bool> NextResultAsync(CancellationToken cancellationToken)
-		{
-			return GetReader().NextResultAsync(cancellationToken);
-		}
+    public override bool Read() => this.GetReader().Read();
 
-		public override bool Read()
-		{
-			return GetReader().Read();
-		}
+    public override Task<bool> ReadAsync(CancellationToken cancellationToken) => this.GetReader().ReadAsync(cancellationToken);
 
-		public override Task<bool> ReadAsync(CancellationToken cancellationToken)
-		{
-			return GetReader().ReadAsync(cancellationToken);
-		}
+    public override T GetFieldValue<T>(int ordinal)
+    {
+      try
+      {
+        return typeof (T) == typeof (char) ? (T) Convert.ChangeType((object) Convert.ToChar(this.GetReader().GetFieldValue<byte>(ordinal)), typeof (T)) : this.GetReader().GetFieldValue<T>(ordinal);
+      }
+      catch (InvalidCastException ex)
+      {
+        return this.ConvertWithReflection<T>(ordinal, ex);
+      }
+    }
 
-		public override T GetFieldValue<T>(int ordinal)
-		{
-			try
-			{
-				if (typeof(T) == typeof(char))
-				{
-					return (T)Convert.ChangeType(Convert.ToChar(GetReader().GetFieldValue<byte>(ordinal)), typeof(T));
-				}
-				return GetReader().GetFieldValue<T>(ordinal);
-			}
-			catch (InvalidCastException e)
-			{
-				return ConvertWithReflection<T>(ordinal, e);
-			}
-		}
+    private T ConvertWithReflection<T>(int ordinal, InvalidCastException e)
+    {
+      try
+      {
+        ParameterExpression parameterExpression = Expression.Parameter(typeof (string), "data");
+        return (T) Expression.Lambda((Expression) Expression.Block((Expression) Expression.Convert((Expression) parameterExpression, typeof (T))), parameterExpression).Compile().DynamicInvoke(this.GetReader().GetValue(ordinal));
+      }
+      catch (Exception ex)
+      {
+        throw e;
+      }
+    }
 
-		private T ConvertWithReflection<T>(int ordinal, InvalidCastException e)
-		{
-			try
-			{
-				ParameterExpression parameterExpression = Expression.Parameter(typeof(string), "data");
-				BlockExpression body = Expression.Block(Expression.Convert(parameterExpression, typeof(T)));
-				Delegate @delegate = Expression.Lambda(body, parameterExpression).Compile();
-				return (T)@delegate.DynamicInvoke(GetReader().GetValue(ordinal));
-			}
-			catch (Exception)
-			{
-				throw e;
-			}
-		}
+    private void CloseReader()
+    {
+      if (this._reader == null)
+        return;
+      this._reader.Dispose();
+      this._reader = (DbDataReader) null;
+    }
 
-		private void CloseReader()
-		{
-			if (_reader != null)
-			{
-				_reader.Dispose();
-				_reader = null;
-			}
-		}
+    protected override void Dispose(bool disposing)
+    {
+      if (!disposing || this._disposed)
+        return;
+      this.CloseReader();
+      base.Dispose(disposing);
+      this._disposed = true;
+    }
 
-		protected override void Dispose(bool disposing)
-		{
-			if (disposing && !_disposed)
-			{
-				CloseReader();
-				base.Dispose(disposing);
-				_disposed = true;
-			}
-		}
-
-		private DbDataReader GetReader()
-		{
-			if (_reader == null)
-			{
-				throw new ObjectDisposedException("WrappedDmDataReader");
-			}
-			return _reader;
-		}
-	}
+    private DbDataReader GetReader() => this._reader != null ? this._reader : throw new ObjectDisposedException(nameof (WrappedDmDataReader));
+  }
 }

@@ -1,73 +1,78 @@
+﻿// Decompiled with JetBrains decompiler
+// Type: Microsoft.EntityFrameworkCore.Metadata.Conventions.DmStoreGenerationConvention
+// Assembly: Microsoft.EntityFrameworkCore.Dm, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 517571CD-6A2C-4476-8E0F-892E361CCCD8
+// Assembly location: E:\主同步盘\我的坚果云\桌面文件夹\Microsoft.EntityFrameworkCore.Dm.dll
+
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata.Builders;
 using Microsoft.EntityFrameworkCore.Metadata.Conventions.Infrastructure;
 
+
+
 namespace Microsoft.EntityFrameworkCore.Metadata.Conventions
 {
-	public class DmStoreGenerationConvention : StoreGenerationConvention
-	{
-		public DmStoreGenerationConvention([NotNull] ProviderConventionSetBuilderDependencies dependencies, [NotNull] RelationalConventionSetBuilderDependencies relationalDependencies)
-			: base(dependencies, relationalDependencies)
-		{
-		}
+  public class DmStoreGenerationConvention : StoreGenerationConvention
+  {
+    public DmStoreGenerationConvention(
+      [NotNull] ProviderConventionSetBuilderDependencies dependencies,
+      [NotNull] RelationalConventionSetBuilderDependencies relationalDependencies)
+      : base(dependencies, relationalDependencies)
+    {
+    }
 
-		public override void ProcessPropertyAnnotationChanged(IConventionPropertyBuilder propertyBuilder, string name, IConventionAnnotation annotation, IConventionAnnotation oldAnnotation, IConventionContext<IConventionAnnotation> context)
-		{
-			//IL_0023: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0028: Unknown result type (might be due to invalid IL or missing references)
-			//IL_0029: Unknown result type (might be due to invalid IL or missing references)
-			//IL_002b: Invalid comparison between Unknown and I4
-			if (annotation == null || ((oldAnnotation != null) ? ((IAnnotation)oldAnnotation).Value : null) != null)
-			{
-				return;
-			}
-			ConfigurationSource configurationSource = annotation.GetConfigurationSource();
-			bool flag = (int)configurationSource != 2;
-			switch (name)
-			{
-			case "Relational:DefaultValue":
-				if (propertyBuilder.HasValueGenerationStrategy(null, flag) == null && RelationalPropertyBuilderExtensions.HasDefaultValue(propertyBuilder, (object)null, flag) != null)
-				{
-					((IConventionContext)context).StopProcessing();
-					return;
-				}
-				break;
-			case "Relational:DefaultValueSql":
-				if (propertyBuilder.HasValueGenerationStrategy(null, flag) == null && RelationalPropertyBuilderExtensions.HasDefaultValueSql(propertyBuilder, (string)null, flag) != null)
-				{
-					((IConventionContext)context).StopProcessing();
-					return;
-				}
-				break;
-			case "Relational:ComputedColumnSql":
-				if (propertyBuilder.HasValueGenerationStrategy(null, flag) == null && RelationalPropertyBuilderExtensions.HasComputedColumnSql(propertyBuilder, (string)null, flag) != null)
-				{
-					((IConventionContext)context).StopProcessing();
-					return;
-				}
-				break;
-			case "Dm:ValueGenerationStrategy":
-				if (((RelationalPropertyBuilderExtensions.HasDefaultValue(propertyBuilder, (object)null, flag) == null) | (RelationalPropertyBuilderExtensions.HasDefaultValueSql(propertyBuilder, (string)null, flag) == null) | (RelationalPropertyBuilderExtensions.HasComputedColumnSql(propertyBuilder, (string)null, flag) == null)) && propertyBuilder.HasValueGenerationStrategy(null, flag) != null)
-				{
-					((IConventionContext)context).StopProcessing();
-					return;
-				}
-				break;
-			}
-			((StoreGenerationConvention)this).ProcessPropertyAnnotationChanged(propertyBuilder, name, annotation, oldAnnotation, context);
-		}
+    public override void ProcessPropertyAnnotationChanged(
+      IConventionPropertyBuilder propertyBuilder,
+      string name,
+      IConventionAnnotation annotation,
+      IConventionAnnotation oldAnnotation,
+      IConventionContext<IConventionAnnotation> context)
+    {
+      if (annotation == null || ((IAnnotation) oldAnnotation)?.Value != null)
+        return;
+      bool fromDataAnnotation = annotation.GetConfigurationSource() != (ConfigurationSource)2;
+      string str = name;
+      if (!(str == "Relational:DefaultValue"))
+      {
+        if (!(str == "Relational:DefaultValueSql"))
+        {
+          if (!(str == "Relational:ComputedColumnSql"))
+          {
+            if (str == "Dm:ValueGenerationStrategy" && RelationalPropertyBuilderExtensions.HasDefaultValue(propertyBuilder, (object) null, fromDataAnnotation) == null | RelationalPropertyBuilderExtensions.HasDefaultValueSql(propertyBuilder, (string) null, fromDataAnnotation) == null | RelationalPropertyBuilderExtensions.HasComputedColumnSql(propertyBuilder, (string) null, fromDataAnnotation) == null && propertyBuilder.HasValueGenerationStrategy(new DmValueGenerationStrategy?(), fromDataAnnotation) != null)
+            {
+              ((IConventionContext) context).StopProcessing();
+              return;
+            }
+          }
+          else if (propertyBuilder.HasValueGenerationStrategy(new DmValueGenerationStrategy?(), fromDataAnnotation) == null && RelationalPropertyBuilderExtensions.HasComputedColumnSql(propertyBuilder, (string) null, fromDataAnnotation) != null)
+          {
+            ((IConventionContext) context).StopProcessing();
+            return;
+          }
+        }
+        else if (propertyBuilder.HasValueGenerationStrategy(new DmValueGenerationStrategy?(), fromDataAnnotation) == null && RelationalPropertyBuilderExtensions.HasDefaultValueSql(propertyBuilder, (string) null, fromDataAnnotation) != null)
+        {
+          ((IConventionContext) context).StopProcessing();
+          return;
+        }
+      }
+      else if (propertyBuilder.HasValueGenerationStrategy(new DmValueGenerationStrategy?(), fromDataAnnotation) == null && RelationalPropertyBuilderExtensions.HasDefaultValue(propertyBuilder, (object) null, fromDataAnnotation) != null)
+      {
+        ((IConventionContext) context).StopProcessing();
+        return;
+      }
+      base.ProcessPropertyAnnotationChanged(propertyBuilder, name, annotation, oldAnnotation, context);
+    }
 
-		protected override void Validate(IConventionProperty property, in StoreObjectIdentifier storeObject)
-		{
-			if (property.GetValueGenerationStrategyConfigurationSource().HasValue && ((IReadOnlyProperty)(object)property).GetValueGenerationStrategy(in storeObject) == DmValueGenerationStrategy.None)
-			{
-				base.Validate(property, in storeObject);
-			}
-			else
-			{
-				base.Validate(property, in storeObject);
-			}
-		}
-	}
+    protected override void Validate(
+      IConventionProperty property,
+      in StoreObjectIdentifier storeObject)
+    {
+      if (property.GetValueGenerationStrategyConfigurationSource().HasValue && ((IReadOnlyProperty) property).GetValueGenerationStrategy(in storeObject) == DmValueGenerationStrategy.None)
+        base.Validate(property, in storeObject);
+      else
+        base.Validate(property, in storeObject);
+    }
+  }
 }

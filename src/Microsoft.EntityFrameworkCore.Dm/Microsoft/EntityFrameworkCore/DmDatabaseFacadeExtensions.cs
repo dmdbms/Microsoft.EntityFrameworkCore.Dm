@@ -1,16 +1,21 @@
-using System;
-using System.Reflection;
+﻿// Decompiled with JetBrains decompiler
+// Type: Microsoft.EntityFrameworkCore.DmDatabaseFacadeExtensions
+// Assembly: Microsoft.EntityFrameworkCore.Dm, Version=6.0.0.0, Culture=neutral, PublicKeyToken=null
+// MVID: 517571CD-6A2C-4476-8E0F-892E361CCCD8
+// Assembly location: E:\主同步盘\我的坚果云\桌面文件夹\Microsoft.EntityFrameworkCore.Dm.dll
+
 using JetBrains.Annotations;
 using Microsoft.EntityFrameworkCore.Dm.Infrastructure.Internal;
 using Microsoft.EntityFrameworkCore.Infrastructure;
+using System;
+using System.Reflection;
+
+
 
 namespace Microsoft.EntityFrameworkCore
 {
-	public static class DmDatabaseFacadeExtensions
-	{
-		public static bool IsDm([NotNull] this DatabaseFacade database)
-		{
-			return database.ProviderName.Equals(typeof(DmOptionsExtension).GetTypeInfo().Assembly.GetName().Name, StringComparison.Ordinal);
-		}
-	}
+  public static class DmDatabaseFacadeExtensions
+  {
+    public static bool IsDm([NotNull] this DatabaseFacade database) => database.ProviderName.Equals(typeof (DmOptionsExtension).GetTypeInfo().Assembly.GetName().Name, StringComparison.Ordinal);
+  }
 }
