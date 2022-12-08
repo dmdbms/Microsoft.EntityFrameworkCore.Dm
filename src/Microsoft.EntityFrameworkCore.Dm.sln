@@ -5,6 +5,8 @@ VisualStudioVersion = 17.1.32210.238
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{9A19103F-16F7-4668-BE54-9A1E7A4F7556}") = "Microsoft.EntityFrameworkCore.Dm", "Microsoft.EntityFrameworkCore.Dm\Microsoft.EntityFrameworkCore.Dm.csproj", "{6628DF1F-466A-43D7-8F71-6505DD44C649}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tests.NET6", "Tests.NET6\Tests.NET6.csproj", "{726392D0-FB3B-4A25-89AF-6C4082C5194F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -15,6 +17,10 @@ Global
 		{6628DF1F-466A-43D7-8F71-6505DD44C649}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6628DF1F-466A-43D7-8F71-6505DD44C649}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6628DF1F-466A-43D7-8F71-6505DD44C649}.Release|Any CPU.Build.0 = Release|Any CPU
+		{726392D0-FB3B-4A25-89AF-6C4082C5194F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{726392D0-FB3B-4A25-89AF-6C4082C5194F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{726392D0-FB3B-4A25-89AF-6C4082C5194F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{726392D0-FB3B-4A25-89AF-6C4082C5194F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
