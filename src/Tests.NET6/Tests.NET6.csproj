@@ -8,16 +8,14 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="DmProvider" Version="1.1.0.12848" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Dm" Version="6.0.0" />
-	  <PackageReference Include="Microsoft.EntityFrameworkCore" Version="6.0.11"></PackageReference>
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.11">
+    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="6.0.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\Microsoft.EntityFrameworkCore.Dm\Microsoft.EntityFrameworkCore.Dm.csproj" />
   </ItemGroup>
 
 </Project>
