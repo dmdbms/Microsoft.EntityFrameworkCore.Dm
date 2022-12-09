@@ -11,7 +11,7 @@ using Tests.NET6;
 namespace Tests.NET6.Migrations
 {
     [DbContext(typeof(TestDbContext))]
-    [Migration("20221208003427_Init")]
+    [Migration("20221209000031_Init")]
     partial class Init
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
