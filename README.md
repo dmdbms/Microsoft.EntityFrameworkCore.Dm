@@ -1,4 +1,4 @@
-# 警告：当前6.0版本由于达梦的代码存在问题，暂时无法正常使用，请使用5.0版本。
+# 提示：此代码仓库不是由达梦公司维护，如果有Pull request，欢迎提交。如果需要技术支持，请联系达梦公司。
 
 # Microsoft.EntityFrameworkCore.Dm [![NuGet Version](http://img.shields.io/nuget/v/dmdbms.Microsoft.EntityFrameworkCore.Dm.svg?style=flat)](https://www.nuget.org/packages/dmdbms.Microsoft.EntityFrameworkCore.Dm/)
 
